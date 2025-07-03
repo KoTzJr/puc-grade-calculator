@@ -5,14 +5,15 @@
 #include "../include/_ui_.h"
 
 void  _ui_::UI_init(Ui::_windows_ *ui) {
-     if (ui != nullptr) {
-          this->ui = ui;
-     }
+    if (ui != nullptr) {
+        this->ui = ui;
+    }
 }
 
-
 void _ui_::_botao_() {
-    QFile filew{"C:\\Users\\KoTz\\CLionProjects\\AvaliacaoDaPuc\\ui_styles.qss"};  // Note a extensão .qss
+    QFile filew{ui_styles_};
+
+
     if (filew.open(QFile::ReadOnly)) {
         QString styleSheet = filew.readAll();
         ui->btn_add->setStyleSheet(styleSheet);

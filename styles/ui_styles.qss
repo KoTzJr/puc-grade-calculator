@@ -1,0 +1,59 @@
+#label_2 {
+ background-image: url(:/img/img/puc-goias-logo-png_seeklogo-354026-removebg-preview.png);
+}
+
+#btn_add{
+    background-image: url(:/img/img/btn_add_normal.png);
+    border-radius: 5px;
+    width: 45px;
+    height : 40px;
+    background-repeat: no-repeat;
+}
+#btn_add:hover {
+    background-image: url(:/img/img/btn_add_hover.png);
+    border: none;
+    border-radius: 10px;
+    min-width: 40px;
+    min-height: 40px;
+}
+#btn_add:pressed {
+    background-image: url(:/img/img/btn_add_pressed.png);
+    border: none;
+    border-radius: 10px;
+    min-width: 40px;
+    min-height: 40px;
+}
+
+#btn_remover {
+        background-image: url(:/img/img/btn_remover_normal.png);
+        border: none;
+        border-radius: 10px;
+        width: 50px;
+        height : 50px;
+        icon: url(:/img/img/mais.png);
+}
+#btn_remover:hover {
+        background-image: url(:/img/img/btn_remover_hover.png);
+        border: none;
+        border-radius: 10px;
+        width: 50px;
+        height : 50px;
+}
+
+QTableWidget {
+    background-color: rgb(44, 44, 44);
+    gridline-color: #353535;
+    color: white;
+    border: 1px solid #353535;
+    border-radius: 5px;
+}
+
+/* Estilo do cabeçalho */
+QHeaderView::section {
+    background-color: #353535;
+    color: white;
+    padding: 5px;
+    border: 1px solid #2a2a2a;
+}
+
+

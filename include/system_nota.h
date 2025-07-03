@@ -24,7 +24,7 @@ public :
       void Formula_Avaliacao(double n1, double  n2, double  &NF);
       void FaltouMedia(double  n1,double  n2,double  NF,int row);
 
-      void FormulaParaMedia(bool N1_Maior,bool N2_Maior, bool iguais,int row);
+      void FormulaParaMedia(bool N1_Menor,bool N2_Menor, bool iguais,int row);
 
        void setN1(double n1);
        void setN2(double n2);

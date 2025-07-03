@@ -6,9 +6,21 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>979</width>
-    <height>727</height>
+    <width>681</width>
+    <height>473</height>
    </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>681</width>
+    <height>473</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>681</width>
+    <height>473</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>_windows_</string>
@@ -28,12 +40,22 @@
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
-        <widget class="QPushButton" name="btn_add">
-         <property name="styleSheet">
-          <string notr="true"> </string>
+        <widget class="QLabel" name="label_2">
+         <property name="text">
+          <string>TextLabel</string>
          </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="btn_add">
          <property name="text">
           <string/>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>36</width>
+           <height>36</height>
+          </size>
          </property>
         </widget>
        </item>
@@ -56,8 +78,20 @@ background-color: rgb(44, 44, 44);
 </string>
       </property>
       <property name="frameShape">
-       <enum>QFrame::Shape::StyledPanel</enum>
+       <enum>QFrame::Shape::NoFrame</enum>
       </property>
+      <property name="horizontalScrollBarPolicy">
+       <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOff</enum>
+      </property>
+      <property name="selectionMode">
+       <enum>QAbstractItemView::SelectionMode::MultiSelection</enum>
+      </property>
+      <property name="gridStyle">
+       <enum>Qt::PenStyle::NoPen</enum>
+      </property>
+      <attribute name="verticalHeaderVisible">
+       <bool>true</bool>
+      </attribute>
       <column>
        <property name="text">
         <string>Nome</string>
@@ -120,7 +154,7 @@ background-color: rgb(44, 44, 44);
   </widget>
  </widget>
  <resources>
-  <include location="../Resources.qrc"/>
+  <include location="Resources.qrc"/>
  </resources>
  <connections/>
 </ui>

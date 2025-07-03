@@ -7,6 +7,9 @@
 #include <QMainWindow>
 #include <QFile>
 #include <..//include/ui__windows_.h>
+#include <QDir>
+
+const QString ui_styles_ = QDir::homePath() + "/Documents/GitHub/puc-grade-calculator/styles/ui_styles.qss";
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class _windows_; }

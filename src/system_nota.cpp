@@ -18,32 +18,30 @@ void system_nota::setNota_final(double nota_final) {
     this->nota_final = nota_final;
 }
 
-void system_nota::FormulaParaMedia(bool N1_Maior, bool N2_Maior, bool iguais,int row) {
+void system_nota::FormulaParaMedia(bool N1_menor, bool n2_menor, bool iguais,int row) {
 
     double N1 = this->N1, N2 = this->N2,NF = this->nota_final;
     QString is = "";
     auto items = this->item->item(row,5);
 
-    if (N1_Maior == true) {
-         QString str_n1 = "";
+
+    if (N1_menor == true) {
          for (double i = 0; i <= 10; i+=00.1) {
              Formula_Avaliacao(i, N2, NF);
+             qDebug () << NF;
              if (NF >= 6.0) {
-                 str_n1 = QString::number(N1);
-                 is = convertMultipleToDecimal(str_n1, QString::number(i));
-                 items->setText("N1: " + str_n1 + " -> " + is);
+                 qDebug () << "tesster";
+                 items->setText(QString::fromStdString(fmt::format("N1 : {:-.1f} -> {:-.1f}",N1,i)));
                  return;
              }
          }
      }
-     if (N2_Maior == true) {
+     if (n2_menor == true) {
              QString str_n2 = "";
-             for (double i = 0; i <= 10.0; i+=00.1) {
+             for (double i = 0; i <= 10; i+=00.1) {
                  Formula_Avaliacao(N1, i, NF);
                  if (NF >= 6) {
-                     str_n2 = QString::number(N2);
-                     is = convertMultipleToDecimal(str_n2, QString::number(i));
-                     items->setText("N2: " + str_n2 + " -> " + is);
+                     items->setText(QString::fromStdString(fmt::format("N2: {:-.1f} -> {:-.1f}",N2,i)));
                      return;
                  }
              }
@@ -52,7 +50,6 @@ void system_nota::FormulaParaMedia(bool N1_Maior, bool N2_Maior, bool iguais,int
     if (iguais == true) {
         for (double i =  N2; i <= 10; i+=00.1) {
             Formula_Avaliacao(i,i, NF);
-            qDebug () << i;
             if (NF >= 6) {
                 auto str = fmt::format("N1 ou N2 : {:-.1f} -> {:-.1f}",this->N1,i);
                 items->setText(QString::fromStdString(str));
@@ -98,12 +95,11 @@ void system_nota::FaltouMedia(double n1, double n2, double NFs, int row) {
     bool n1_menor = false, n2_menor = false;
 
     // Se a nota final for maior ou igual a 6, limpa o texto e retorna
+
     if (NFs >= 6.0f) {
-        qDebug() << "NF: " << NFs;
         item->item(row, 5)->setText("");
         return;
     }
-    double NF = 0.0f;
     auto item = this->item->item(row, 5);
 
     // Se o item for nulo, retorna
@@ -124,7 +120,6 @@ void system_nota::FaltouMedia(double n1, double n2, double NFs, int row) {
     }
 
     this->FormulaParaMedia(n1_menor,n2_menor,n1 == n2,row);
-
 }
 
 /**
@@ -165,9 +160,8 @@ void system_nota::Formula_Avaliacao(double  n1, double  n2, double  &NF) {
     if (NF == 0.0f) {
         return;
     }
-    QString SNF = convertToDecimalFormat(QString::number(NF));
-    NF = SNF.toDouble();
-
+    const auto get = fmt::format("{:-.2f}",NF);
+    NF = QString::fromStdString(get).toDouble();
     this->nota_final = NF;
 }
 
@@ -188,9 +182,6 @@ void system_nota::is_aprovado(int indexItem) {
         item->item(indexItem, 4)->setBackground(QColor(Qt::darkGreen));
         item->item(indexItem, 4)->setText("Aprovado");
     }
-    if (this->nota_final == 0) {
-        item->item(indexItem, 4)->setText("");
-    }
 }
 
 /**
@@ -199,22 +190,22 @@ void system_nota::is_aprovado(int indexItem) {
  * ou se ambas estiverem vazias
  * Retorna true se ambas contiverem números com ponto decimal
  */
-bool system_nota::is_verifiqueCacterece(int pos) {
+bool system_nota::is_verifiqueCacterece(int pos){
     int asvezes_pontos_n1 =0,asvezez_pontos_n2 =0;
 
     bool isalpha_n1 = false, isalpha_n2 = false;
-    auto n1 = this->item->item(pos, 1);
-    auto n2 = this->item->item(pos, 2);
+    auto firstInput_n1 = this->item->item(pos, 1);
+    auto firstInput_n2 = this->item->item(pos, 2);
 
 
 
-    for (auto &s: n1->text().toStdString()) {
+    for (auto &s: firstInput_n1->text().toStdString()) {
         if (isalpha(s)) {
             isalpha_n1 = true;
         }
     }
 
-    for (auto &w: n2->text().toStdString()) {
+    for (auto &w: firstInput_n2->text().toStdString()) {
         if (isalpha(w)) {
             isalpha_n2 = true;
         }
@@ -227,11 +218,11 @@ bool system_nota::is_verifiqueCacterece(int pos) {
     }
 
     bool nbr = false, nb1 = false;
-    if (n1 != nullptr && n2 != nullptr) {
-        if (n1->text().isEmpty() && n2->text().isEmpty()) {
+    if (firstInput_n1 != nullptr && firstInput_n2 != nullptr) {
+        if (firstInput_n1->text().isEmpty() && firstInput_n2->text().isEmpty()) {
             return false;
         }
-        for (auto &i: n1->text()) {
+        for (auto &i: firstInput_n1->text()) {
             if (i == "-") {
                 return false;
             }
@@ -239,7 +230,7 @@ bool system_nota::is_verifiqueCacterece(int pos) {
                 asvezes_pontos_n1++;
             }
         }
-        for (auto &i: n2->text()) {
+        for (auto &i: firstInput_n2->text()) {
             if (i == "-") {
                 return false;
             }

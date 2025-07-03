@@ -78,6 +78,11 @@ _windows_::~_windows_() {
  * com QTableWidgetItems vazios
  */
 void _windows_::on_btn_add_clicked() {
+
+    if (ui->tableWidget->rowCount() >= 10) {
+        return;
+    }
+
     ui->tableWidget->insertRow(0);
     for (int b = 0; b < ui->tableWidget->rowCount();b++) {
         for (int a = 0; a < ui->tableWidget->columnCount();a++) {
