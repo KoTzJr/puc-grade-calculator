@@ -1,0 +1,7 @@
+QPushButton {
+    background-image: url("://img//botao-adicionar.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    border: none;
+    border-radius: 10px;
+}
