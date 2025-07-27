@@ -5,7 +5,7 @@
 #include <QTimer>
 #include "system_nota.h"
 #include "_ui_.h"
-
+#include  <ListDataItens.h>
 QT_BEGIN_NAMESPACE
 namespace Ui { class _windows_; }
 QT_END_NAMESPACE
@@ -22,13 +22,18 @@ private slots:
     void on_btn_remover_clicked();
     void Update();
     void AtualizarNotasTabela();
-
+    void on_actionAbrir_triggered();
+    void on_actionNovo_triggered();
+    void on_actionSalvar_triggered();
+    void DataTable(std::vector<Oitem> & obj);
+    void on_actionSalvar_como_triggered();
 private:
     Ui::_windows_ *ui;
     QTimer *timer;
     system_nota *system_nota_;
     _ui_ *is;
     int i = 0;
+    std::vector<Oitem>  sets;
 };
 
 #endif //_WINDOWS__H

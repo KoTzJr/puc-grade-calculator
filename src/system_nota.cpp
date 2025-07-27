@@ -6,8 +6,6 @@
 #include <fmt/format.h>
 #include <QRandomGenerator>
 
-
-
 void system_nota::setN1(double n1) {
    this->N1 = n1;
 }
@@ -24,13 +22,10 @@ void system_nota::FormulaParaMedia(bool N1_menor, bool n2_menor, bool iguais,int
     QString is = "";
     auto items = this->item->item(row,5);
 
-
     if (N1_menor == true) {
          for (double i = 0; i <= 10; i+=00.1) {
              Formula_Avaliacao(i, N2, NF);
-             qDebug () << NF;
              if (NF >= 6.0) {
-                 qDebug () << "tesster";
                  items->setText(QString::fromStdString(fmt::format("N1 : {:-.1f} -> {:-.1f}",N1,i)));
                  return;
              }
@@ -46,7 +41,6 @@ void system_nota::FormulaParaMedia(bool N1_menor, bool n2_menor, bool iguais,int
                  }
              }
      }
-
     if (iguais == true) {
         for (double i =  N2; i <= 10; i+=00.1) {
             Formula_Avaliacao(i,i, NF);
@@ -59,8 +53,6 @@ void system_nota::FormulaParaMedia(bool N1_menor, bool n2_menor, bool iguais,int
 
     }
 }
-
-
 // Converte um número para formato decimal
 QString system_nota::convertToDecimalFormat(QString is) {
     const QString number = "123456789";
@@ -74,8 +66,6 @@ QString system_nota::convertToDecimalFormat(QString is) {
     }
     return is;
 }
-
-
 // Converte múltiplos números para formato decimal 
 QString system_nota::convertMultipleToDecimal(QString &is_1, QString is) {
     const QString number = "123456789";
@@ -90,7 +80,6 @@ QString system_nota::convertMultipleToDecimal(QString &is_1, QString is) {
     }
     return is;
 }
-
 void system_nota::FaltouMedia(double n1, double n2, double NFs, int row) {
     bool n1_menor = false, n2_menor = false;
 
@@ -121,7 +110,6 @@ void system_nota::FaltouMedia(double n1, double n2, double NFs, int row) {
 
     this->FormulaParaMedia(n1_menor,n2_menor,n1 == n2,row);
 }
-
 /**
  * Calcula a nota final usando a fórmula: NF = 0.4*n1 + 0.6*n2
  * Se houver AI (Avaliação Individual), soma ao n2
@@ -196,8 +184,6 @@ bool system_nota::is_verifiqueCacterece(int pos){
     bool isalpha_n1 = false, isalpha_n2 = false;
     auto firstInput_n1 = this->item->item(pos, 1);
     auto firstInput_n2 = this->item->item(pos, 2);
-
-
 
     for (auto &s: firstInput_n1->text().toStdString()) {
         if (isalpha(s)) {

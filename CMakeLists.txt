@@ -10,11 +10,16 @@ set(CMAKE_AUTOUIC ON)
 find_package(glm CONFIG REQUIRED) ## GLM
 find_package(fmt CONFIG REQUIRED)
 
+set(Boost_USE_STATIC_LIBS ON)  # Usar bibliotecas estáticas
+set(Boost_USE_MULTITHREADED ON)  # Usar versão multithread
+
+
 
 include_directories(${CMAKE_SOURCE_DIR}/include)
 
 set(CMAKE_AUTOUIC_SEARCH_PATHS ${CMAKE_SOURCE_DIR} ${CMAKE_SOURCE_DIR}/src)
 
+find_package(Boost REQUIRED COMPONENTS regex)
 
 find_package(Qt6 COMPONENTS
         Core
@@ -34,6 +39,13 @@ add_executable(AvaliacaoDaPuc
         src/_ui_.cpp
         include/_ui_.h
         resources.qrc
+        src/ListDataItens.cpp
+        include/ListDataItens.h
+        src/FileManger.cpp
+        include/FileManger.h
+        include/GlobalVariables.h
+        src/SearchStrRegex.cpp
+        include/SearchStrRegex.h
 )
 
 target_link_libraries(AvaliacaoDaPuc PRIVATE
@@ -43,6 +55,7 @@ target_link_libraries(AvaliacaoDaPuc PRIVATE
         glm::glm
         glm::glm-header-only
         fmt::fmt
+        Boost::regex
 )
 
 # Adicione após o seu add_executable()
