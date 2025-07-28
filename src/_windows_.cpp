@@ -96,6 +96,9 @@ void _windows_::on_actionSalvar_como_triggered() {
         text += fmt::format(" id : {} \n Nome : {} \n N1 : {} \n N2 : {} \n==========\n\n", s.id, s.nome.toStdString(),
                             s.N1.toStdString(), s.N2.toStdString());
     }
+    if (i.isEmpty()) {
+        return;
+    }
     auto get = file.save(i.url(QUrl::PreferLocalFile), QString::fromStdString(text));
 
     if (get == true) {
