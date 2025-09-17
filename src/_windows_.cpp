@@ -4,54 +4,41 @@
 
 // You may need to build the project (run Qt uic code generator) to get "ui__windows_.h" resolved
 
-#include "../include/_windows_.h"
-#include "ui__windows_.h"
-#include <fmt/printf.h>
-#include "../include/ListDataItens.h"
-#include  <QFileDialog>
-#include <iostream>
-#include <regex>
+#include <string>
 #include <boost/regex.hpp>
-#include <boost/algorithm/string.hpp>
-#include <SearchStrRegex.h>
-#include <GlobalVariables.h>
+#include <fmt/core.h>
+#include <QFileDialog>
+#include "../include/_windows_.h"
+#include "../include/ListDataItens.h"
+#include "SearchStrRegex.h"
+#include "GlobalVariables.h"
 
 namespace Global {
     Oitem itemTable;
-    ListDataItens list_data_itens;
 }
 
 
-void _windows_::AtualizarNotasTabela() {
-    // Nota final inicializada com zero
-    double NF = 0.0;
-    if (ui->tableWidget->rowCount() > 0) {
-        for (int a = 0; a < ui->tableWidget->rowCount(); a++) {
-            // Obtém os items das colunas de nota 1 e 2
-            auto n1 = ui->tableWidget->item(a, 1);
-            auto n2 = ui->tableWidget->item(a, 2);
+void _windows_::Update_table_data() {
 
-            if (system_nota_->is_verifiqueCacterece(a)) {
-                // Converte o texto das notas para double
-                auto f_n1 = n1->text().toDouble();
-                auto f_n2 = n2->text().toDouble();
-                // Calcula a nota final
-                system_nota_->Formula_Avaliacao(f_n1, f_n2, NF, ui->lineEdit->text().toFloat());
-                // Atualiza a nota final na tabela
-                this->system_nota_->setN1(f_n1);
-                this->system_nota_->setN2(f_n2);
-                this->system_nota_->setNota_final(NF);
-
-                ui->tableWidget->item(a, 3)->setText(QString::number(NF));
-                ui->tableWidget->item(a, 3)->setFlags(Qt::ItemIsEnabled);
-                ui->tableWidget->item(a, 4)->setFlags(Qt::ItemIsEnabled);
-                // Verifica aprovação e falta para atingir média
-                this->system_nota_->is_aprovado(a);
-                this->system_nota_->FaltouMedia(f_n1, f_n2, NF, a);
-            }
-        }
-    } else {
+    if (ui->tableWidget->rowCount() == 0 && ui->tableWidget->columnCount() == 0) {
         return;
+    }
+    if (ui->tableWidget->rowCount() > 0) {
+        for (int index_item = 0; index_item < ui->tableWidget->rowCount(); index_item++) {
+
+            auto N1 = ui->tableWidget->item(index_item, 4)->text().toDouble();
+            auto N2 = ui->tableWidget->item(index_item, 5)->text().toDouble();;
+            auto IA = ui->lineEdit->text().toFloat();
+            auto aula_ministrava = ui->tableWidget->item(index_item, 2)->text().toInt();
+            auto aula_presenca = ui->tableWidget->item(index_item, 3)->text().toInt();
+            this->system_nota_->sets_todas_atividades(0,aula_ministrava,aula_presenca,N1,N2,IA);
+
+            if (system_nota_->is_verifiqueCacterece(index_item))
+            {
+                this->system_nota_->processGradeResult(index_item);
+            }
+            this->system_nota_->clear_table();
+        }
     }
 }
 
@@ -61,7 +48,7 @@ void _windows_::AtualizarNotasTabela() {
 * a interface atualizada
 */
 void _windows_::Update() {
-    AtualizarNotasTabela();
+    Update_table_data();
 }
 
 /**
@@ -83,31 +70,7 @@ _windows_::_windows_(QWidget *parent) : QMainWindow(parent), ui(new Ui::_windows
 }
 
 void _windows_::on_actionSalvar_como_triggered() {
-    ui->label_3->clear();
-    if (ui->tableWidget->rowCount() == 0 && ui->tableWidget->columnCount() == 0) {
-        return;
-    }
-    QFileDialog *newDialog = new QFileDialog(this);
-    auto i = newDialog->getSaveFileUrl(this, "", QUrl(), "Text files (*.txt);");
-    FileManger file;
-    std::string text = "";
-    DataTable(sets);
-    for (auto &s: sets) {
-        text += fmt::format(" id : {} \n Nome : {} \n N1 : {} \n N2 : {} \n==========\n\n", s.id, s.nome.toStdString(),
-                            s.N1.toStdString(), s.N2.toStdString());
-    }
-    if (i.isEmpty()) {
-        return;
-    }
-    auto get = file.save(i.url(QUrl::PreferLocalFile), QString::fromStdString(text));
 
-    if (get == true) {
-        ui->label_3->setText("salvado com sucesso !");
-    }else {
-        ui->label_3->setText("não foi possivel salvar o arquivo !");
-    }
-   // ui->label_3->clear();
-    _sleep(400);
 }
 
 /**
@@ -116,20 +79,25 @@ void _windows_::on_actionSalvar_como_triggered() {
  * com id, nome e notas de cada aluno
  */
 void _windows_::on_actionSalvar_triggered() {
-    ui->label_3->clear();
-    FileManger file;
-    std::string text = "";
-    DataTable(sets);
-    for (auto &s: sets) {
-        text += fmt::format(" id : {} \n Nome : {} \n N1 : {} \n N2 : {} \n==========\n\n", s.id, s.nome.toStdString(),
-                            s.N1.toStdString(), s.N2.toStdString());
-    }
-   auto get = file.save("data.txt", QString::fromStdString(text));
 
-    if (get == true) {
-        ui->label_3->setText("salvado com sucesso !");
-    }else {
-        ui->label_3->setText("não foi possivel salvar o arquivo !");
+    for (int index_item = 0; index_item < ui->tableWidget->rowCount(); index_item++) {
+
+        auto nome = ui->tableWidget->item(index_item, 0)->text();
+        auto aula_prevista = ui->tableWidget->item(index_item, 1)->text().toInt();
+        auto aula_ministradas = ui->tableWidget->item(index_item, 2)->text().toInt();
+        auto numero_presenca = ui->tableWidget->item(index_item, 3)->text().toInt();
+        auto N1 = ui->tableWidget->item(index_item, 4)->text().toDouble();
+        auto N2 = ui->tableWidget->item(index_item, 5)->text().toDouble();
+
+        sets.push_back(Oitem(nome,aula_prevista,aula_ministradas,numero_presenca,N1,N2));
+    }
+
+   auto  is_file_save = FileManger::save("data.json",sets) ;
+    if (is_file_save) {
+        ui->label_3->setText("foi criado com sucesso");
+    }
+    else {
+        ui->label_3->setText("não foi criado com sucesso");
     }
 }
 /**
@@ -140,30 +108,23 @@ void _windows_::on_actionSalvar_triggered() {
 void _windows_::on_actionAbrir_triggered() {
     FileManger file;
     QFileDialog *newDialog = new QFileDialog(this);
-    auto Get = newDialog->getOpenFileUrl(this, "", QUrl(), "Text files (*.txt);");
-    auto i = file.Load(Get.toLocalFile());
+    auto Get = newDialog->getOpenFileUrl(this, "", QUrl(), "Text files (*.json);");
+    qDebug () << Get.toLocalFile();
 
-    std::string str = i.toStdString();
-    std::vector<std::string> vector_N1, vector_N2;
-    auto vector_nome = SearchStrRegex::search_nome(str);
-    SearchStrRegex::search_N1_N2(str, vector_N1, vector_N2);
-    for (int a = 0; a < vector_nome.size(); a++) {
-        ui->tableWidget->insertRow(0);
-    }
-    for (int b = 0; b < ui->tableWidget->rowCount(); b++) {
-        for (int a = 0; a < ui->tableWidget->columnCount(); a++) {
-            if (ui->tableWidget->item(b, a) == nullptr) {
-                ui->tableWidget->setItem(b, a, new QTableWidgetItem);
+    nlohmann::json obj = {};
+    FileManger::Load(Get.toLocalFile(),obj);
+
+     for (int a = 0; a < obj.size(); a++) {
+         ui->tableWidget->insertRow(0);
+     }
+         for (int b = 0; b < ui->tableWidget->rowCount();b++) {
+             for (int a = 0; a < ui->tableWidget->columnCount();a++) {
+                 if (ui->tableWidget->item(b,a) == nullptr) {
+                     ui->tableWidget->setItem(b,a,new QTableWidgetItem);
+                 }
+                 ui->tableWidget->item(b,4)->setText(QString::fromStdString(obj[a]["N1"]));
             }
         }
-    }
-    for (int a = 0; a < ui->tableWidget->rowCount(); a++) {
-        if (vector_nome.size() > 0 && a < vector_nome.size()) {
-            ui->tableWidget->item(a, 0)->setText(QString::fromStdString(vector_nome[a]));
-            ui->tableWidget->item(a, 1)->setText(QString::fromStdString(vector_N1[a]));
-            ui->tableWidget->item(a, 2)->setText(QString::fromStdString(vector_N2[a]));
-        }
-    }
 }
 
 
@@ -175,22 +136,14 @@ void _windows_::on_actionNovo_triggered() {
     _windows_ *janela = new _windows_(this);
     janela->show();
 }
-
-void _windows_::DataTable(std::vector<Oitem> & obj) {
-
-    for (int a = 0; a < ui->tableWidget->rowCount(); a++) {
-        Global::itemTable.id = a;
-        Global::itemTable.nome  = ui->tableWidget->item(a, 0)->text();
-        Global::itemTable.N1    = ui->tableWidget->item(a, 1)->text();
-        Global::itemTable.N2    = ui->tableWidget->item(a, 2)->text();
-        Global::itemTable.media = ui->tableWidget->item(a, 3)->text();
-        obj.push_back(Global::itemTable);
-    }
-}
-
+/**
+ * Destrutor da classe _windows_
+ * Libera a memória alocada para o objeto ui
+ */
 _windows_::~_windows_() {
     delete ui;
 }
+
 /**
  * Função chamada quando o botão "Add" é clicado
  * Adiciona uma nova linha na tabela e inicializa suas células
@@ -198,7 +151,7 @@ _windows_::~_windows_() {
  */
 void _windows_::on_btn_add_clicked() {
 
-    if (ui->tableWidget->rowCount() >= 10) {
+    if (ui->tableWidget->rowCount() >= 12) {
         return;
     }
 
@@ -207,12 +160,18 @@ void _windows_::on_btn_add_clicked() {
         for (int a = 0; a < ui->tableWidget->columnCount();a++) {
              if (ui->tableWidget->item(b,a) == nullptr) {
                  ui->tableWidget->setItem(b,a,new QTableWidgetItem);
+                 QStringList labels;
+                 labels << "";
+                 ui->tableWidget->setVerticalHeaderLabels(labels);
+
              }
         }
     }
-    ui->tableWidget->item(0,3)->setFlags(Qt::ItemIsEnabled);
-    ui->tableWidget->item(0,4)->setFlags(Qt::ItemIsEnabled);
-    ui->tableWidget->item(0,5)->setFlags(Qt::ItemIsEnabled);
+
+    ui->tableWidget->item(0,6)->setFlags(Qt::ItemIsEnabled);
+    ui->tableWidget->item(0,7)->setFlags(Qt::ItemIsEnabled);
+    ui->tableWidget->item(0,8)->setFlags(Qt::ItemIsEnabled);
+
     i++;
 }
 /**

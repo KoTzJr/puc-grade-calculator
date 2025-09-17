@@ -5,15 +5,20 @@
 #ifndef FILEMANGER_H
 #define FILEMANGER_H
 
-#include <QSaveFile>
 #include <QFile>
+#include "ListDataItens.h"
+#include <nlohmann/json.hpp>
+#include <fstream>
+#include <QDebug>
+
+using Json = nlohmann::json;
 
 class FileManger {
 private :
     QFile file;
 public :
-    QByteArray Load(QString path);
-    bool save(QString path,QString data);
+    static bool Load(QString path,nlohmann::json & objs);
+    static bool save(QString path,std::vector<Oitem> obj);
     FileManger();
 
 };

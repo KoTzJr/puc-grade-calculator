@@ -12,33 +12,20 @@
 
 struct Oitem {
     uint id;
-    QString nome = "";
-    QString N1   = "";
-    QString N2   = "";
-    QString media = "";
-    QString resultado = "";
-    QString faltou_media = "";
-    QString avaliacao_individual = "";
+    QString name;
+    int planned_classes;
+    int taught_classes;
+    int attendance_count;
+    double N1;
+    double N2;
+    double IA;
 
     bool operator < (const Oitem &other) const {
         return id < other.id;
     }
+
+     Oitem ();
+     Oitem(QString nome ,int aula_prevista,int aula_ministradas,int numero_presenca, double N1,double N2);
 };
-
-
-//item ObjetItem;
-
-class ListDataItens {
-  private :
-    std::vector<Oitem> itens;
-public :
-    ListDataItens();
-    void setitem(Oitem * objet);
-    void setitem(std::vector<Oitem> objet);
-    std::vector<Oitem> getitem();
-
-};
-
-
 
 #endif //DATAITENS_H

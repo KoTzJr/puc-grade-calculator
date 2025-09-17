@@ -8,8 +8,7 @@
 #include "ListDataItens.h"
 #include <FileManger.h>
 
-extern Oitem         itemTable;
-extern ListDataItens list_data_itens;
+extern Oitem itemTable;
 
 
 #endif //GLOBALVARIABLES_H

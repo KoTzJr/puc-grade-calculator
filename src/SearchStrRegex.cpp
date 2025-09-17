@@ -4,6 +4,7 @@
 
 #include "../include/SearchStrRegex.h"
 
+#include <iostream>
 #include <qregularexpression.h>
 #include <QString>
 #include <regex>
@@ -22,7 +23,6 @@ std::vector<std::string> SearchStrRegex::search_nome(std::string text_file) {
     std::string nome = "";
     for (int a = 0; it != end; ++it) {
         boost::smatch match = *it;
-
         nome = match.str();
         nomes.push_back(nome);
     }
@@ -39,13 +39,13 @@ void SearchStrRegex::search_N1_N2(std::string text_file,
     re = new boost::regex("N1\\s*:\\s*(\\d+(?:\\.\\d+)?)", boost::regex::perl);
     boost::sregex_iterator it(text_file.begin(), text_file.end(), *re);
     boost::sregex_iterator end;
-    std::string nome = "", nome_1 = "";
+    std::string matchedString = "", n2String = "";
     QString i1 = "", i2 = "";
     for (; it != end; ++it) {
         boost::smatch match = *it;
-        nome = match.str();
-        QString get = QString::fromStdString(nome);
-        if (nome.find("N1: ") == -1) {
+        matchedString = match.str();
+        QString get = QString::fromStdString(matchedString);
+        if (matchedString.find("N1: ") == -1) {
             get.remove("N1");
             i1 = get.remove(":");
             n1.push_back(i1.toStdString());
@@ -58,9 +58,9 @@ void SearchStrRegex::search_N1_N2(std::string text_file,
     boost::sregex_iterator ends;
     for (; it_1 != ends; ++it_1) {
         boost::smatch match = *it_1;
-        nome_1 = match.str();
-        QString get = QString::fromStdString(nome_1);
-        if (nome_1.find("N2: ") == -1) {
+        n2String = match.str();
+        QString get = QString::fromStdString(n2String);
+        if (n2String.find("N2: ") == -1) {
             get.remove("N2");
             i2 = get.remove(":");
             n2.push_back(i2.toStdString());
@@ -68,7 +68,4 @@ void SearchStrRegex::search_N1_N2(std::string text_file,
     }
     delete re;
 }
-
-SearchStrRegex::SearchStrRegex() {
-
-}
+SearchStrRegex::SearchStrRegex() {}

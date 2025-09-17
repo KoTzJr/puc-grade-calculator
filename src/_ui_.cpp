@@ -4,6 +4,34 @@
 
 #include "../include/_ui_.h"
 
+void Style_Table::Style::table_result(QTableWidget *ui,int index,int ps) {
+     if (ui != nullptr) {
+         if (ps == 0) {
+             ui->item(index,7)->setText("Reprovado por falta");
+             ui->item(index,7)->setBackground(QColor(Qt::red));
+         }
+
+         if (ps == 1) {
+             ui->item(index,7)->setText("Aprovado");
+             ui->item(index,7)->setBackground(QColor(Qt::darkGreen));
+
+         }
+
+         if (ps == 2) {
+             ui->item(index,7)->setText("Reprovado");
+             ui->item(index,7)->setBackground(QColor(Qt::red));
+         }
+     }
+    return;
+}
+
+
+void Style_Table::Style::clear_table(QTableWidget *ui,int h,int colune) {
+    ui->item(h,colune)->setText("");
+    ui->item(h, colune)->setBackground(QColor(""));
+}
+
+
 void  _ui_::UI_init(Ui::_windows_ *ui) {
     if (ui != nullptr) {
         this->ui = ui;
