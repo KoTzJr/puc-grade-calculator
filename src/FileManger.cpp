@@ -6,11 +6,14 @@
 #include "ListDataItens.h"
 
 
-bool FileManger::Load(QString path,Json & objs) {
+bool FileManger::Load(QString path,Json & get_json) {
     QFile file(path);
+    std::filesystem::path p(path.toStdString());
+    if (std::filesystem::exists(p) == false) {
+        return false;
+    }
     if (file.open(QFile::Text | QFile::ReadOnly)){}
-    nlohmann::json obj = nlohmann::json::parse(file.readAll().toStdString());
-    objs = obj;
+    get_json = nlohmann::json::parse(file.readAll().toStdString());
     return true;
 }
 
@@ -18,9 +21,6 @@ bool FileManger::save(QString path,std::vector<Oitem>  obj) {
     if (path.isEmpty() == true || obj.empty() == true) {
         return false;
     }
-     if (std::filesystem::exists(path.toStdString())) {
-         std::remove(path.toStdString().c_str());
-     }
     if (obj.empty() == false) {
         std::fstream file(path.toStdString(),std::ios::app);
         nlohmann::ordered_json json = nlohmann::ordered_json::array();
@@ -45,9 +45,6 @@ bool FileManger::save(QString path,std::vector<Oitem>  obj) {
             return false;
         }
     }
-
-     int valor = 10;
-     auto valor_ = 10; // inteiro
     return false;
 }
 FileManger::FileManger() {

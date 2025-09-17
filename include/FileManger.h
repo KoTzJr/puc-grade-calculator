@@ -17,7 +17,7 @@ class FileManger {
 private :
     QFile file;
 public :
-    static bool Load(QString path,nlohmann::json & objs);
+    static bool Load(QString path,nlohmann::json & get_json);
     static bool save(QString path,std::vector<Oitem> obj);
     FileManger();
 

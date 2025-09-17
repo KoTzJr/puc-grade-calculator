@@ -5,13 +5,12 @@
 // You may need to build the project (run Qt uic code generator) to get "ui__windows_.h" resolved
 
 #include <string>
-#include <boost/regex.hpp>
 #include <fmt/core.h>
 #include <QFileDialog>
 #include "../include/_windows_.h"
 #include "../include/ListDataItens.h"
-#include "SearchStrRegex.h"
 #include "GlobalVariables.h"
+#include "../cmake-build-debug/AvaliacaoDaPuc_autogen/include/ui__windows_.h"
 
 namespace Global {
     Oitem itemTable;
@@ -92,12 +91,12 @@ void _windows_::on_actionSalvar_triggered() {
         sets.push_back(Oitem(nome,aula_prevista,aula_ministradas,numero_presenca,N1,N2));
     }
 
-   auto  is_file_save = FileManger::save("data.json",sets) ;
+   auto  is_file_save = FileManger::save("/home/kotz/Documentos/salvamento/data.json",sets) ;
     if (is_file_save) {
-        ui->label_3->setText("foi criado com sucesso");
+        ui->label_3->setText("Foi criado com sucesso !");
     }
     else {
-        ui->label_3->setText("não foi criado com sucesso");
+        ui->label_3->setText("Falha de salvamento");
     }
 }
 /**
@@ -108,23 +107,58 @@ void _windows_::on_actionSalvar_triggered() {
 void _windows_::on_actionAbrir_triggered() {
     FileManger file;
     QFileDialog *newDialog = new QFileDialog(this);
-    auto Get = newDialog->getOpenFileUrl(this, "", QUrl(), "Text files (*.json);");
-    qDebug () << Get.toLocalFile();
+     auto Get = newDialog->getOpenFileUrl(this, "", QUrl(), "Json files (*.json);");
 
     nlohmann::json obj = {};
-    FileManger::Load(Get.toLocalFile(),obj);
+   auto get = FileManger::Load(Get.toLocalFile(),
+    obj);
+    if (get == false) {
+        return;
 
-     for (int a = 0; a < obj.size(); a++) {
-         ui->tableWidget->insertRow(0);
-     }
-         for (int b = 0; b < ui->tableWidget->rowCount();b++) {
-             for (int a = 0; a < ui->tableWidget->columnCount();a++) {
-                 if (ui->tableWidget->item(b,a) == nullptr) {
-                     ui->tableWidget->setItem(b,a,new QTableWidgetItem);
-                 }
-                 ui->tableWidget->item(b,4)->setText(QString::fromStdString(obj[a]["N1"]));
+    }
+        for (int a = 0; a < obj.size();a++){
+            ui->tableWidget->insertRow(0);
+        }
+
+    for (int b = 0; b < ui->tableWidget->rowCount();b++) {
+        for (int a = 0; a < ui->tableWidget->columnCount();a++) {
+            if (ui->tableWidget->item(b,a) == nullptr) {
+                ui->tableWidget->setItem(b,a,new QTableWidgetItem());
             }
         }
+    }
+
+    try {
+        int b = 0;
+        for (auto & value : obj ) {
+                if (value.at("nome").is_string() == true
+                    && value.at("aulas previstas").is_number() == true
+                    && value.at("aulas ministradas").is_number() == true
+                    && value.at("numero presenca").is_number() == true
+                    && value.at("N1").is_number() == true
+                    && value.at("N2").is_number() == true)
+                {
+                    auto nome =  to_string(value.at("nome"));
+                    auto aulas_previstas = to_string(value.at("aulas previstas"));
+                    auto aulas_ministradas = to_string(value.at("aulas ministradas"));
+                    auto numeros_preseca = to_string(value.at("numero presenca"));
+                    auto N1 = to_string(value.at("N1"));
+                    auto N2 = to_string(value.at("N2"));
+                    ui->tableWidget->item(b,0)->setText(QString::fromStdString(nome));
+                    ui->tableWidget->item(b,1)->setText(QString::fromStdString(aulas_previstas));
+                    ui->tableWidget->item(b,2)->setText(QString::fromStdString(aulas_ministradas));
+                    ui->tableWidget->item(b,3)->setText(QString::fromStdString(numeros_preseca));
+                    ui->tableWidget->item(b,4)->setText(QString::fromStdString(N1));
+                    ui->tableWidget->item(b,5)->setText(QString::fromStdString(N2));
+                    b++;
+            }
+
+        }
+    }catch (std::exception &e) {
+        qDebug() << e.what();
+    }
+
+    delete newDialog;
 }
 
 

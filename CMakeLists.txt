@@ -42,8 +42,6 @@ add_executable(AvaliacaoDaPuc
         src/FileManger.cpp
         include/FileManger.h
         include/GlobalVariables.h
-        src/SearchStrRegex.cpp
-        include/SearchStrRegex.h
 )
 
 # -------------------------
