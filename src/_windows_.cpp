@@ -90,8 +90,8 @@ void _windows_::on_actionSalvar_triggered() {
 
         sets.push_back(Oitem(nome,aula_prevista,aula_ministradas,numero_presenca,N1,N2));
     }
-
-   auto  is_file_save = FileManger::save("/home/kotz/Documentos/salvamento/data.json",sets) ;
+    ui->label_3->clear();
+   auto  is_file_save = FileManger::save("data.json",sets) ;
     if (is_file_save) {
         ui->label_3->setText("Foi criado com sucesso !");
     }
@@ -99,6 +99,13 @@ void _windows_::on_actionSalvar_triggered() {
         ui->label_3->setText("Falha de salvamento");
     }
 }
+QString removeDoubleQuotes(QString str) {
+    if (str.isEmpty() == true) {
+        return QString();
+    }
+    return str.remove('"');
+}
+
 /**
  * Função chamada quando a opção "Abrir" é acionada
  * Abre uma janela de diálogo para selecionar um arquivo .txt
@@ -107,7 +114,7 @@ void _windows_::on_actionSalvar_triggered() {
 void _windows_::on_actionAbrir_triggered() {
     FileManger file;
     QFileDialog *newDialog = new QFileDialog(this);
-     auto Get = newDialog->getOpenFileUrl(this, "", QUrl(), "Json files (*.json);");
+     auto Get = newDialog->getOpenFileUrl(this, "Abrir JSON", QUrl(), "Arquivos JSON (*.json)");
 
     nlohmann::json obj = {};
    auto get = FileManger::Load(Get.toLocalFile(),
@@ -129,7 +136,7 @@ void _windows_::on_actionAbrir_triggered() {
     }
 
     try {
-        int b = 0;
+        int index = 0;
         for (auto & value : obj ) {
                 if (value.at("nome").is_string() == true
                     && value.at("aulas previstas").is_number() == true
@@ -144,13 +151,13 @@ void _windows_::on_actionAbrir_triggered() {
                     auto numeros_preseca = to_string(value.at("numero presenca"));
                     auto N1 = to_string(value.at("N1"));
                     auto N2 = to_string(value.at("N2"));
-                    ui->tableWidget->item(b,0)->setText(QString::fromStdString(nome));
-                    ui->tableWidget->item(b,1)->setText(QString::fromStdString(aulas_previstas));
-                    ui->tableWidget->item(b,2)->setText(QString::fromStdString(aulas_ministradas));
-                    ui->tableWidget->item(b,3)->setText(QString::fromStdString(numeros_preseca));
-                    ui->tableWidget->item(b,4)->setText(QString::fromStdString(N1));
-                    ui->tableWidget->item(b,5)->setText(QString::fromStdString(N2));
-                    b++;
+                    ui->tableWidget->item(index,0)->setText(removeDoubleQuotes(QString::fromStdString(nome)));
+                    ui->tableWidget->item(index,1)->setText(removeDoubleQuotes(QString::fromStdString(aulas_previstas)));
+                    ui->tableWidget->item(index,2)->setText(removeDoubleQuotes(QString::fromStdString(aulas_ministradas)));
+                    ui->tableWidget->item(index,3)->setText(removeDoubleQuotes(QString::fromStdString(numeros_preseca)));
+                    ui->tableWidget->item(index,4)->setText(removeDoubleQuotes(QString::fromStdString(N1)));
+                    ui->tableWidget->item(index,5)->setText(removeDoubleQuotes(QString::fromStdString(N2)));
+                    index++;
             }
 
         }

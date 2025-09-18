@@ -66,7 +66,7 @@ if(WIN32)
 
     set(QT_INSTALL_PATH "${CMAKE_PREFIX_PATH}")
     if(NOT EXISTS "${QT_INSTALL_PATH}")
-        set(QT_INSTALL_PATH "C:/Qt/6.9.0/msvc2022_64")
+        set(QT_INSTALL_PATH "C:\\Qt\\6.9.1\\msvc2022_64")
     endif()
 
     if(EXISTS "${QT_INSTALL_PATH}/bin")

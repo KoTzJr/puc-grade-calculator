@@ -5,7 +5,6 @@
 #include <QDir>
 
 const QString ui_styles_ = QDir::homePath() + "/Documents/GitHub/puc-grade-calculator/styles/ui_styles.qss";
-const QString ui_styles_2_ = "/home/kotz/Documentos/GitHub/puc-grade-calculator/styles/ui_styles.qss";
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class _windows_; class Style;}
