@@ -5,6 +5,15 @@
 #include "system_nota.h"
 #include "_ui_.h"
 #include  <ListDataItens.h>
+#include "option.h"
+#include <string>
+#include <fmt/core.h>
+#include <QFileDialog>
+#include "../include/_windows_.h"
+#include "../include/ListDataItens.h"
+#include "GlobalVariables.h"
+#include "../cmake-build-debug/AvaliacaoDaPuc_autogen/include/ui__windows_.h"
+
 
 #include "FileManger.h"
 QT_BEGIN_NAMESPACE
@@ -27,6 +36,8 @@ private slots:
     void on_actionNovo_triggered();
     void on_actionSalvar_triggered();
     void on_actionSalvar_como_triggered();
+
+    void on_actionOpition_triggered();
 
     void info_save(QString patch,int x);
 private:

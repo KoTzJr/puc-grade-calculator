@@ -43,6 +43,9 @@ add_executable(AvaliacaoDaPuc
         src/FileManger.cpp
         include/FileManger.h
         include/GlobalVariables.h
+        src/option.cpp
+        include/option.h
+        option.ui
 )
 
 # -------------------------

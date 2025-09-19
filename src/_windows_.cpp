@@ -4,12 +4,8 @@
 
 // You may need to build the project (run Qt uic code generator) to get "ui__windows_.h" resolved
 
-#include <string>
-#include <fmt/core.h>
-#include <QFileDialog>
+
 #include "../include/_windows_.h"
-#include "../include/ListDataItens.h"
-#include "GlobalVariables.h"
 #include "../cmake-build-debug/AvaliacaoDaPuc_autogen/include/ui__windows_.h"
 
 namespace Global {
@@ -97,6 +93,13 @@ void _windows_::info_save(QString get,int x) {
         ui->label_3->setText("Falha de salvamento");
     }
 }
+
+void _windows_::on_actionOpition_triggered() {
+
+   option *op = new option(this);
+    op->show();
+}
+
 
 
 void _windows_::on_actionSalvar_como_triggered() {

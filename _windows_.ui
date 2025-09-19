@@ -239,7 +239,7 @@ background-color: rgb(44, 44, 44);
     <property name="title">
      <string>Ferramentas</string>
     </property>
-    <addaction name="actionopcoes"/>
+    <addaction name="actionOpition"/>
    </widget>
    <addaction name="menuArquivos"/>
    <addaction name="menuFerramentas"/>
@@ -269,7 +269,7 @@ background-color: rgb(44, 44, 44);
     <string>Exportar</string>
    </property>
   </action>
-  <action name="actionopcoes">
+  <action name="actionOpition">
    <property name="text">
     <string>opções</string>
    </property>

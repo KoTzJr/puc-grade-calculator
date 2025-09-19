@@ -1,0 +1,15 @@
+{ 
+    "en" : {
+        "arquivo" : "file",
+        "novo"  : "new",
+        "Abrir" : "open",
+        "salvar" : "save",
+        "nome" : "name"
+    },
+    "PT-BR" : {
+         "file" : "arquivos",
+         "new " : "novo",
+         "Open" : "Abrir"
+     }
+
+}
