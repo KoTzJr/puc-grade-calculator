@@ -66,10 +66,69 @@ _windows_::_windows_(QWidget *parent) : QMainWindow(parent), ui(new Ui::_windows
     timer->setInterval(16);
     connect(timer, SIGNAL(timeout()), this, SLOT(Update()));
     timer->start();
+
 }
+
+void _windows_::info_save(QString get,int x) {
+
+
+    for (int index_item = 0; index_item < ui->tableWidget->rowCount(); index_item++) {
+        auto nome = ui->tableWidget->item(index_item, 0)->text();
+        auto aula_prevista = ui->tableWidget->item(index_item, 1)->text().toInt();
+        auto aula_ministradas = ui->tableWidget->item(index_item, 2)->text().toInt();
+        auto numero_presenca = ui->tableWidget->item(index_item, 3)->text().toInt();
+        auto N1 = ui->tableWidget->item(index_item, 4)->text().toDouble();
+        auto N2 = ui->tableWidget->item(index_item, 5)->text().toDouble();
+        sets.push_back(Oitem(nome,aula_prevista,aula_ministradas,numero_presenca,N1,N2));
+    }
+    ui->label_3->clear();
+
+    bool is_file_save = false;
+   if (x == 0) {
+        is_file_save = FileManger::save(get,sets) ;
+   }
+    if (x == 1) {
+        is_file_save = FileManger::save("data.json",sets) ;
+    }
+    if (is_file_save) {
+        ui->label_3->setText("Foi criado com sucesso !");
+    }
+    else {
+        ui->label_3->setText("Falha de salvamento");
+    }
+}
+
 
 void _windows_::on_actionSalvar_como_triggered() {
 
+    QFileDialog *fileDialog = new QFileDialog(this);
+    auto selectedFile = fileDialog->getSaveFileName(this,"Salvar o arquivo","","");
+
+    std::string filePath = selectedFile.toStdString();
+    if (filePath.find(".json") == std::string::npos) {
+         filePath = filePath += ".json";
+         selectedFile = QString::fromStdString(filePath);
+    }
+    if (selectedFile!= nullptr && filePath.find(".json") != std::string::npos) {
+         info_save(selectedFile,0);
+
+    }else {
+        ui->label_3->setText("Falha de salvamento necessario Json ");
+    }
+    if (fileDialog != nullptr) {
+        delete fileDialog;
+    }
+}
+/**
+ * Remove as aspas duplas (") de uma string
+ * @param str String de entrada a ter as aspas removidas
+ * @return String sem aspas duplas ou string vazia se a entrada for vazia
+ */
+QString removeDoubleQuotes(QString str) {
+    if (str.isEmpty() == true) {
+        return QString();
+    }
+    return str.remove('"');
 }
 
 /**
@@ -79,33 +138,8 @@ void _windows_::on_actionSalvar_como_triggered() {
  */
 void _windows_::on_actionSalvar_triggered() {
 
-    for (int index_item = 0; index_item < ui->tableWidget->rowCount(); index_item++) {
-
-        auto nome = ui->tableWidget->item(index_item, 0)->text();
-        auto aula_prevista = ui->tableWidget->item(index_item, 1)->text().toInt();
-        auto aula_ministradas = ui->tableWidget->item(index_item, 2)->text().toInt();
-        auto numero_presenca = ui->tableWidget->item(index_item, 3)->text().toInt();
-        auto N1 = ui->tableWidget->item(index_item, 4)->text().toDouble();
-        auto N2 = ui->tableWidget->item(index_item, 5)->text().toDouble();
-
-        sets.push_back(Oitem(nome,aula_prevista,aula_ministradas,numero_presenca,N1,N2));
-    }
-    ui->label_3->clear();
-   auto  is_file_save = FileManger::save("data.json",sets) ;
-    if (is_file_save) {
-        ui->label_3->setText("Foi criado com sucesso !");
-    }
-    else {
-        ui->label_3->setText("Falha de salvamento");
-    }
+     info_save("",1);
 }
-QString removeDoubleQuotes(QString str) {
-    if (str.isEmpty() == true) {
-        return QString();
-    }
-    return str.remove('"');
-}
-
 /**
  * Função chamada quando a opção "Abrir" é acionada
  * Abre uma janela de diálogo para selecionar um arquivo .txt
@@ -119,6 +153,7 @@ void _windows_::on_actionAbrir_triggered() {
     nlohmann::json obj = {};
    auto get = FileManger::Load(Get.toLocalFile(),
     obj);
+
     if (get == false) {
         return;
 
@@ -159,8 +194,8 @@ void _windows_::on_actionAbrir_triggered() {
                     ui->tableWidget->item(index,5)->setText(removeDoubleQuotes(QString::fromStdString(N2)));
                     index++;
             }
-
         }
+
     }catch (std::exception &e) {
         qDebug() << e.what();
     }

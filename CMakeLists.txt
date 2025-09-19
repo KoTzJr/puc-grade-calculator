@@ -6,15 +6,16 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
+set(CMAKE_BUILD_TYPE Debug)
+add_compile_options(-g -O0)
+
 # -------------------------
 # Bibliotecas externas
 # -------------------------
-#find_package(glm CONFIG REQUIRED)
-find_package(fmt CONFIG REQUIRED)
-find_package(Boost REQUIRED COMPONENTS regex)
-find_package(Qt6 COMPONENTS Core Gui Widgets REQUIRED)
-find_package(nlohmann_json CONFIG REQUIRED)
-
+find_package(fmt CONFIG REQUIRED) ## Fmt
+find_package(Qt6 COMPONENTS Core Gui Widgets REQUIRED) ## QT
+find_package(nlohmann_json CONFIG REQUIRED) ## JSON
+find_package(unofficial-libharu CONFIG REQUIRED)  # PDF
 
 # -------------------------
 # Includes
@@ -52,8 +53,8 @@ target_link_libraries(AvaliacaoDaPuc PRIVATE
         Qt::Gui
         Qt::Widgets
         fmt::fmt
-        Boost::regex
         nlohmann_json::nlohmann_json
+        unofficial::libharu::hpdf
 )
 # -------------------------
 # Pós-build (Qt)

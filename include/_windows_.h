@@ -1,7 +1,6 @@
 #ifndef _WINDOWS__H
 #define _WINDOWS__H
 
-#include <QMainWindow>
 #include <QTimer>
 #include "system_nota.h"
 #include "_ui_.h"
@@ -28,6 +27,8 @@ private slots:
     void on_actionNovo_triggered();
     void on_actionSalvar_triggered();
     void on_actionSalvar_como_triggered();
+
+    void info_save(QString patch,int x);
 private:
     Ui::_windows_ *ui;
     QTimer *timer;
@@ -37,6 +38,7 @@ private:
     FileManger file;
     std::vector<Oitem>  sets;
 
+    QString patch_load;
     Oitem teste;
 };
 

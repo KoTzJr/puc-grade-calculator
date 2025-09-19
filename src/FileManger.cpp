@@ -18,6 +18,7 @@ bool FileManger::Load(QString path,Json & get_json) {
 }
 
 bool FileManger::save(QString path,std::vector<Oitem>  obj) {
+
     if (path.isEmpty() == true || obj.empty() == true) {
         return false;
     }
