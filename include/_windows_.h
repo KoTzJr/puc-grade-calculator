@@ -50,7 +50,10 @@ private:
     std::vector<Oitem>  sets;
 
     QString patch_load;
-    Oitem teste;
+    //Oitem teste;
+
+    _FILE_ info_file;
+
 };
 
 #endif //_WINDOWS__H

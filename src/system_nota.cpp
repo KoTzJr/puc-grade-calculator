@@ -197,11 +197,10 @@ void system_nota::processGradeResult(int indexItem) {
     }
     if (NF >= 6.0 || NF >= 6 || NF >= 6.0 - 1e-9) {
         Style_Table::Style::table_result(item, indexItem, 1);
-        qDebug () << "teste";
+
 
     }else if (NF < 6.0-1e-9 && NF > 0.0- 1e-9) {
         Style_Table::Style::table_result(item, indexItem, 2);
-        qDebug () << "teste_2";
     }
     if (result_presenca != 0.0 || result_presenca != 0.0f) {
         if (this->result_presenca <= 75.0 - 1e-9 && this->result_presenca >= 0.0- 1e-9) {

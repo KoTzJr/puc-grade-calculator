@@ -199,6 +199,13 @@ background-color: rgb(44, 44, 44);
          </property>
         </spacer>
        </item>
+       <item>
+        <widget class="QLabel" name="info_arquivo">
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
        <item alignment="Qt::AlignmentFlag::AlignLeft">
         <widget class="QLabel" name="label_3">
          <property name="text">

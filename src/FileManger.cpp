@@ -17,6 +17,13 @@ bool FileManger::Load(QString path,Json & get_json) {
     return true;
 }
 
+_FILE_ FileManger::is_open(QString path) {
+    QFile file(path);
+    auto get = file.open(QFile::ReadOnly);
+    //fileIsOpen = get;
+    _FILE_ obj = {get, path};
+    return obj;
+}
 bool FileManger::save(QString path,std::vector<Oitem>  obj) {
 
     if (path.isEmpty() == true || obj.empty() == true) {

@@ -67,7 +67,12 @@ _windows_::_windows_(QWidget *parent) : QMainWindow(parent), ui(new Ui::_windows
 
 void _windows_::info_save(QString get,int x) {
 
-
+   if (ui->tableWidget->rowCount() == 0) {
+       return;
+   }
+    if (info_file.isFileOpen == true && info_file.fileName.isEmpty() == false) {
+        x = -1;
+    }
     for (int index_item = 0; index_item < ui->tableWidget->rowCount(); index_item++) {
         auto nome = ui->tableWidget->item(index_item, 0)->text();
         auto aula_prevista = ui->tableWidget->item(index_item, 1)->text().toInt();
@@ -78,8 +83,11 @@ void _windows_::info_save(QString get,int x) {
         sets.push_back(Oitem(nome,aula_prevista,aula_ministradas,numero_presenca,N1,N2));
     }
     ui->label_3->clear();
-
     bool is_file_save = false;
+
+    if (x == -1) {
+        is_file_save = FileManger::save(info_file.fileName,sets) ;
+    }
    if (x == 0) {
         is_file_save = FileManger::save(get,sets) ;
    }
@@ -153,8 +161,10 @@ void _windows_::on_actionAbrir_triggered() {
     QFileDialog *newDialog = new QFileDialog(this);
      auto Get = newDialog->getOpenFileUrl(this, "Abrir JSON", QUrl(), "Arquivos JSON (*.json)");
 
+    info_file = file.is_open(Get.toString());
+
     nlohmann::json obj = {};
-   auto get = FileManger::Load(Get.toLocalFile(),
+    auto get = FileManger::Load(Get.toLocalFile(),
     obj);
 
     if (get == false) {
@@ -203,6 +213,7 @@ void _windows_::on_actionAbrir_triggered() {
         qDebug() << e.what();
     }
 
+    ui->info_arquivo->setText("Arquivo aberto: "+ Get.fileName());
     delete newDialog;
 }
 
