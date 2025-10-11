@@ -5,6 +5,20 @@
 #include "../include/FileManger.h"
 #include "ListDataItens.h"
 
+#define window_32 false
+#define systemlinux false
+
+#ifdef _WIN32
+   window_32 true
+#endif
+
+#ifdef __linux__
+    systemlinux true
+#endif
+
+#ifdef __APPLE__
+    // macOS
+#endif
 
 bool FileManger::Load(QString path,Json & get_json) {
     QFile file(path);
@@ -17,11 +31,18 @@ bool FileManger::Load(QString path,Json & get_json) {
     return true;
 }
 
+void FileManger::Remove_linha(QString & path) {
+    qDebug () << "windows " << window_32;
+    auto get =  path.remove("file://");
+    path = get;
+}
+
+
 _FILE_ FileManger::is_open(QString path) {
+    Remove_linha(path);
     QFile file(path);
-    auto get = file.open(QFile::ReadOnly);
-    //fileIsOpen = get;
-    _FILE_ obj = {get, path};
+    bool is_open = file.open(QFile::Text | QFile::ReadOnly);
+    _FILE_ obj = {is_open, path};
     return obj;
 }
 bool FileManger::save(QString path,std::vector<Oitem>  obj) {

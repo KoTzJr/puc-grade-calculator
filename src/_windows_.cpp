@@ -70,9 +70,6 @@ void _windows_::info_save(QString get,int x) {
    if (ui->tableWidget->rowCount() == 0) {
        return;
    }
-    if (info_file.isFileOpen == true && info_file.fileName.isEmpty() == false) {
-        x = -1;
-    }
     for (int index_item = 0; index_item < ui->tableWidget->rowCount(); index_item++) {
         auto nome = ui->tableWidget->item(index_item, 0)->text();
         auto aula_prevista = ui->tableWidget->item(index_item, 1)->text().toInt();
@@ -84,7 +81,11 @@ void _windows_::info_save(QString get,int x) {
     }
     ui->label_3->clear();
     bool is_file_save = false;
-
+    std::filesystem::path file_path = get.toStdString();
+    if (info_file.isFileOpen == true && info_file.fileName.isEmpty() == false) {
+        std::filesystem::remove(info_file.fileName.toStdString());
+        x = -1;
+    }
     if (x == -1) {
         is_file_save = FileManger::save(info_file.fileName,sets) ;
     }
@@ -95,7 +96,7 @@ void _windows_::info_save(QString get,int x) {
         is_file_save = FileManger::save("data.json",sets) ;
     }
     if (is_file_save) {
-        ui->label_3->setText("Foi criado com sucesso !");
+        ui->label_3->setText("Salvo !");
     }
     else {
         ui->label_3->setText("Falha de salvamento");
