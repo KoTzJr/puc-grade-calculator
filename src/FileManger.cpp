@@ -3,43 +3,27 @@
 //
 
 #include "../include/FileManger.h"
+
+#include <qurl.h>
+
 #include "ListDataItens.h"
 
 #define window_32 false
 #define systemlinux false
 
-#ifdef _WIN32
-   window_32 true
-#endif
+bool FileManger::Load(const QString path,Json & get_json,bool & is_open) {
 
-#ifdef __linux__
-    systemlinux true
-#endif
-
-#ifdef __APPLE__
-    // macOS
-#endif
-
-bool FileManger::Load(QString path,Json & get_json) {
-    QFile file(path);
-    std::filesystem::path p(path.toStdString());
-    if (std::filesystem::exists(p) == false) {
+    if (path.isEmpty() == true) {
         return false;
     }
-    if (file.open(QFile::Text | QFile::ReadOnly)){}
-    get_json = nlohmann::json::parse(file.readAll().toStdString());
-    return true;
+      QFile file(path);
+      file.open(QFile::ReadWrite | QFile::WriteOnly  | QFile::Text);
+      is_open = file.isOpen();
+      get_json = nlohmann::json::parse(file.readAll().toStdString());
+      return true;
 }
-
-void FileManger::Remove_linha(QString & path) {
-    qDebug () << "windows " << window_32;
-    auto get =  path.remove("file://");
-    path = get;
-}
-
 
 _FILE_ FileManger::is_open(QString path) {
-    Remove_linha(path);
     QFile file(path);
     bool is_open = file.open(QFile::Text | QFile::ReadOnly);
     _FILE_ obj = {is_open, path};

@@ -62,10 +62,10 @@ _windows_::_windows_(QWidget *parent) : QMainWindow(parent), ui(new Ui::_windows
     timer->setInterval(16);
     connect(timer, SIGNAL(timeout()), this, SLOT(Update()));
     timer->start();
-
 }
 
 void _windows_::info_save(QString get,int x) {
+    bool is_file_save = false;
 
    if (ui->tableWidget->rowCount() == 0) {
        return;
@@ -80,14 +80,13 @@ void _windows_::info_save(QString get,int x) {
         sets.push_back(Oitem(nome,aula_prevista,aula_ministradas,numero_presenca,N1,N2));
     }
     ui->label_3->clear();
-    bool is_file_save = false;
-    std::filesystem::path file_path = get.toStdString();
-    if (info_file.isFileOpen == true && info_file.fileName.isEmpty() == false) {
-        std::filesystem::remove(info_file.fileName.toStdString());
-        x = -1;
-    }
-    if (x == -1) {
+    if (info_file.fileName.isEmpty() == false && is_open == true) {
+        QFile outputFile(info_file.fileName);
+        if (outputFile.exists() == true) {
+            outputFile.remove();
+        }
         is_file_save = FileManger::save(info_file.fileName,sets) ;
+        x = -9;
     }
    if (x == 0) {
         is_file_save = FileManger::save(get,sets) ;
@@ -101,6 +100,7 @@ void _windows_::info_save(QString get,int x) {
     else {
         ui->label_3->setText("Falha de salvamento");
     }
+
 }
 
 void _windows_::on_actionOpition_triggered() {
@@ -149,7 +149,6 @@ QString removeDoubleQuotes(QString str) {
  * com id, nome e notas de cada aluno
  */
 void _windows_::on_actionSalvar_triggered() {
-
      info_save("",1);
 }
 /**
@@ -158,21 +157,26 @@ void _windows_::on_actionSalvar_triggered() {
  * e carrega seu conteúdo na tabela, populando nome e notas
  */
 void _windows_::on_actionAbrir_triggered() {
+
+
     FileManger file;
     QFileDialog *newDialog = new QFileDialog(this);
-     auto Get = newDialog->getOpenFileUrl(this, "Abrir JSON", QUrl(), "Arquivos JSON (*.json)");
+    auto openFileUrl = newDialog->getOpenFileUrl(this, "Abrir JSON", QUrl(), "Arquivos JSON (*.json)");
+    nlohmann::json get_json = {};
 
-    info_file = file.is_open(Get.toString());
-
-    nlohmann::json obj = {};
-    auto get = FileManger::Load(Get.toLocalFile(),
-    obj);
-
-    if (get == false) {
-        return;
-
+    if (ui->tableWidget->rowCount() > 0) {
+        for (int i = ui->tableWidget->rowCount()+1; i >= 0;i--) {
+           ui->tableWidget->removeRow(i);
+        }
     }
-        for (int a = 0; a < obj.size();a++){
+    bool isLoadSuccessful = false;
+    if (openFileUrl.isValid() == true) {
+        isLoadSuccessful = FileManger::Load(openFileUrl.toLocalFile(),get_json,is_open);
+    }
+     if (isLoadSuccessful == false) {
+        return;
+     }
+        for (int a = 0; a < get_json.size();a++){
             ui->tableWidget->insertRow(0);
         }
 
@@ -186,8 +190,8 @@ void _windows_::on_actionAbrir_triggered() {
 
     try {
         int index = 0;
-        for (auto & value : obj ) {
-                if (value.at("nome").is_string() == true
+        for (auto & value : get_json ) {
+            if (value.at("nome").is_string() == true
                     && value.at("aulas previstas").is_number() == true
                     && value.at("aulas ministradas").is_number() == true
                     && value.at("numero presenca").is_number() == true
@@ -213,8 +217,9 @@ void _windows_::on_actionAbrir_triggered() {
     }catch (std::exception &e) {
         qDebug() << e.what();
     }
-
-    ui->info_arquivo->setText("Arquivo aberto: "+ Get.fileName());
+    ui->info_arquivo->setText("Arquivo aberto: "+ openFileUrl.fileName());
+    info_file.fileName = openFileUrl.toLocalFile();
+    info_file.isFileOpen = is_open;
     delete newDialog;
 }
 
@@ -270,6 +275,15 @@ void _windows_::on_btn_add_clicked() {
  * Remove a última linha da tabela
  */
 void _windows_::on_btn_remover_clicked() {
+   bool is_Selected = false;
+   auto i =  ui->tableWidget->selectedItems();
+    if (i.isEmpty() == false) {
+        auto index =  i.at(1)->row();
+        ui->tableWidget->removeRow(index);
+        is_Selected = true;
+    }
+    if (is_Selected == false) {
+        ui->tableWidget->removeRow(ui->tableWidget->rowCount() - 1);
+    }
 
-    ui->tableWidget->removeRow(ui->tableWidget->rowCount() - 1);
 }

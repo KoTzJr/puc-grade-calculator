@@ -15,7 +15,6 @@ add_compile_options(-g -O0)
 find_package(fmt CONFIG REQUIRED) ## Fmt
 find_package(Qt6 COMPONENTS Core Gui Widgets REQUIRED) ## QT
 find_package(nlohmann_json CONFIG REQUIRED) ## JSON
-find_package(unofficial-libharu CONFIG REQUIRED)  # PDF
 
 # -------------------------
 # Includes
@@ -57,7 +56,6 @@ target_link_libraries(AvaliacaoDaPuc PRIVATE
         Qt::Widgets
         fmt::fmt
         nlohmann_json::nlohmann_json
-        unofficial::libharu::hpdf
 )
 # -------------------------
 # Pós-build (Qt)

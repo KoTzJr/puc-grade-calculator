@@ -39,7 +39,7 @@ void  _ui_::UI_init(Ui::_windows_ *ui) {
 }
 
 void _ui_::_botao_() {
-    QFile filew{ui_styles__};
+    QFile filew{ui_styles_};
 
 
     if (filew.open(QFile::ReadOnly)) {

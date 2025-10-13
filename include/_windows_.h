@@ -54,6 +54,8 @@ private:
 
     _FILE_ info_file;
 
+    bool is_open;
+
 };
 
 #endif //_WINDOWS__H
