@@ -6,10 +6,17 @@
 
 #include "../include/option.h"
 #include "ui_option.h"
+#include "FileManger.h"
 
 
 option::option(QWidget *parent) : QMainWindow(parent), ui(new Ui::option) {
     ui->setupUi(this);
+}
+void option::on_btn_aplicar_clicked() {
+  qDebug () << "teste";
+}
+void option::on_btn_salvar_clicked() {
+    qDebug () << "salva";
 }
 
 option::~option() {

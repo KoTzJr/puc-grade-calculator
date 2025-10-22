@@ -5,6 +5,8 @@
 #include "../include/ListDataItens.h"
 #include <QSaveFile>
 
+
+
 Oitem::Oitem() {}
 
 Oitem::Oitem(QString nome ,int aula_prevista,int aula_ministradas,int numero_presenca, double N1,double N2) {

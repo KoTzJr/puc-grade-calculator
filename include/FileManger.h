@@ -10,6 +10,13 @@
 #include <nlohmann/json.hpp>
 #include <fstream>
 #include <QDebug>
+#include <Info_config.h>
+
+enum OPTION {
+    SAVE_FILE_JSON_ALUNO = 0,
+    SAVE_FILE_JSON_Sistema = 1
+};
+
 
 using Json = nlohmann::json;
 
@@ -27,10 +34,8 @@ public :
     static _FILE_ is_open(QString path);
     static bool Load(const QString path,nlohmann::json & get_json, bool & open);
     static bool save(QString path,std::vector<Oitem> obj);
+    static bool save(QString path,Info_config info);
     FileManger();
 
 };
-
-
-
 #endif //FILEMANGER_H

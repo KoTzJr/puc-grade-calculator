@@ -8,7 +8,7 @@
 #include <string>
 #include <vector>
 #include <QString>
-
+#include <FileManger.h>
 
 struct Oitem {
     uint id;
@@ -27,5 +27,6 @@ struct Oitem {
      Oitem ();
      Oitem(QString nome ,int aula_prevista,int aula_ministradas,int numero_presenca, double N1,double N2);
 };
+
 
 #endif //DATAITENS_H

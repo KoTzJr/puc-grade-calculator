@@ -19,6 +19,10 @@ QT_END_NAMESPACE
 class option : public QMainWindow {
     Q_OBJECT
 
+private slots:
+    void on_btn_aplicar_clicked();
+    void on_btn_salvar_clicked();
+
 public:
     explicit option(QWidget *parent = nullptr);
 

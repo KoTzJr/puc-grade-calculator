@@ -45,6 +45,8 @@ add_executable(AvaliacaoDaPuc
         src/option.cpp
         include/option.h
         option.ui
+        src/Info_config.cpp
+        include/Info_config.h
 )
 
 # -------------------------
