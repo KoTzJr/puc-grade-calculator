@@ -8,13 +8,7 @@
 #include "../include/_windows_.h"
 #include "../cmake-build-debug/AvaliacaoDaPuc_autogen/include/ui__windows_.h"
 
-namespace Global {
-    Oitem itemTable;
-}
-
-
 void _windows_::Update_table_data() {
-
     if (ui->tableWidget->rowCount() == 0 && ui->tableWidget->columnCount() == 0) {
         return;
     }
@@ -45,7 +39,6 @@ void _windows_::Update_table_data() {
 void _windows_::Update() {
     Update_table_data();
 }
-
 /**
  * Construtor da classe _windows_
  * Inicializa a interface gráfica, configura botões e timer
@@ -55,15 +48,17 @@ void _windows_::Update() {
 _windows_::_windows_(QWidget *parent) : QMainWindow(parent), ui(new Ui::_windows_) {
     ui->setupUi(this);
     this->is = new _ui_;
+    GLOBAL::init_global(ui);
     is->UI_init(this->ui); // Inicializa a interface do usuário passando o ponteiro ui para a classe _ui_
     is->_botao_();
+    FileManger::Load("C:\\Users\\KoTz\\Documents\\GitHub\\puc-grade-calculator\\cmake-build-debug-visual-studio\\config.json",system_json);
+    idioma_ui::set_ui_idioma(system_json,this->ui,GLOBAL::idioma);
     system_nota_ = new system_nota(ui->tableWidget);
     this->timer = new QTimer(this);
     timer->setInterval(16);
     connect(timer, SIGNAL(timeout()), this, SLOT(Update()));
     timer->start();
 }
-
 void _windows_::info_save(QString get,int x) {
     bool is_file_save = false;
 
@@ -100,12 +95,12 @@ void _windows_::info_save(QString get,int x) {
     else {
         ui->label_3->setText("Falha de salvamento");
     }
+    sets.clear();
 
 }
 
 void _windows_::on_actionOpition_triggered() {
-
-   option *op = new option(this);
+    op = new option(this);
     op->show();
 }
 
@@ -157,9 +152,8 @@ void _windows_::on_actionSalvar_triggered() {
  * e carrega seu conteúdo na tabela, populando nome e notas
  */
 void _windows_::on_actionAbrir_triggered() {
-
-
     FileManger file;
+    bool is_file_aluno = false;
     QFileDialog *newDialog = new QFileDialog(this);
     auto openFileUrl = newDialog->getOpenFileUrl(this, "Abrir JSON", QUrl(), "Arquivos JSON (*.json)");
     nlohmann::json get_json = {};
@@ -211,15 +205,18 @@ void _windows_::on_actionAbrir_triggered() {
                     ui->tableWidget->item(index,4)->setText(removeDoubleQuotes(QString::fromStdString(N1)));
                     ui->tableWidget->item(index,5)->setText(removeDoubleQuotes(QString::fromStdString(N2)));
                     index++;
+                is_file_aluno = true;
             }
         }
 
     }catch (std::exception &e) {
         qDebug() << e.what();
     }
-    ui->info_arquivo->setText("Arquivo aberto: "+ openFileUrl.fileName());
-    info_file.fileName = openFileUrl.toLocalFile();
-    info_file.isFileOpen = is_open;
+    if (is_file_aluno == true) {
+        ui->info_arquivo->setText("Arquivo aberto: "+ openFileUrl.fileName());
+        info_file.fileName = openFileUrl.toLocalFile();
+        info_file.isFileOpen = is_open;
+    }
     delete newDialog;
 }
 
@@ -278,6 +275,9 @@ void _windows_::on_btn_remover_clicked() {
    bool is_Selected = false;
    auto i =  ui->tableWidget->selectedItems();
     if (i.isEmpty() == false) {
+        if (i.at(1)->tableWidget() == nullptr) {
+            return;
+        }
         auto index =  i.at(1)->row();
         ui->tableWidget->removeRow(index);
         is_Selected = true;

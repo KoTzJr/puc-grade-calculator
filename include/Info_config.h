@@ -9,16 +9,10 @@
 #include "nlohmann/json.hpp"
 
 
-class Info_config {
+
+struct Info_config {
     QString idioma;
     QString version;
-public :
-    void set_idioma(QString idioma);
-    QString get_idioma() const;
-    QString get_version() const;
-
-    Info_config();
-    Info_config(QString idioma,QString version);
 };
 
 

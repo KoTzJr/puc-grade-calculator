@@ -1,15 +1,51 @@
-{ 
+{
     "en" : {
-        "arquivo" : "file",
-        "novo"  : "new",
-        "Abrir" : "open",
-        "salvar" : "save",
-        "nome" : "name"
+      "arquivo": "File",
+      "novo": "New",
+      "abrir": "Open",
+      "salvar": "Save",
+      "salvar como": "Save as",
+      "sair": "Exit",
+      "ferramentas": "Tools",
+      "ajuda": "Help",
+      "idioma": "Language",
+      "nome": "Name",
+      "aulas previstas": "Planned Classes",
+      "aulas ministradas": "Taught Classes",
+      "numero presença": "Attendance Count",
+      "n1": "N1",
+      "n2": "N2",
+      "media": "Average",
+      "resultado": "Result",
+      "falta media": "Needed Avg",
+      "projeto teste": "Test Project",
+      "pucsimual": "PUCsimual",
+      "opção": "Option",
+      "aplicar": "Apply"
     },
-    "PT-BR" : {
-         "file" : "arquivos",
-         "new " : "novo",
-         "Open" : "Abrir"
+    "Portugues" : {
+      "file": "Arquivo",
+      "new": "Novo",
+      "open": "Abrir",
+      "save": "Salvar",
+      "save as": "Salvar como",
+      "exit": "Sair",
+      "tools": "Ferramentas",
+      "help": "Ajuda",
+      "language": "Idioma",
+      "name": "Nome",
+      "planned classes": "Aulas Previstas",
+      "taught classes": "Aulas Ministradas",
+      "attendance count": "Número Presenças",
+      "n1": "N1",
+      "n2": "N2",
+      "average": "Média",
+      "result": "Resultado",
+      "needed avg": "Falta Média",
+      "test project": "Projeto Teste",
+      "pucsimual": "PUCsimual",
+      "option": "opção",
+      "apply": "Aplicar"
      }
 
 }

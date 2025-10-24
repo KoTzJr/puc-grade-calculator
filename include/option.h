@@ -29,7 +29,7 @@ public:
     ~option() override;
 
 private:
-    Ui::option *ui;
+    Ui::option *ui_option_;
 };
 
 

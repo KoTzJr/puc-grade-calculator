@@ -8,6 +8,19 @@
 
 #include "ListDataItens.h"
 
+bool FileManger::Load(QString path,Json & get_json) {
+    if (path.isEmpty() == true) {
+        return false;
+    }
+    QFile file(path);
+    if (file.exists() == false) {
+        return false;
+    }
+    file.open(QIODevice::ReadOnly | QIODevice::Text);
+    get_json = nlohmann::json::parse(file.readAll().toStdString());
+    return true;
+}
+
 bool FileManger::Load(const QString path,Json & get_json,bool & is_open) {
 
     if (path.isEmpty() == true) {
@@ -30,15 +43,16 @@ bool FileManger::save(QString path,Info_config info) {
     if (path.isEmpty()) {
         return false;
     }
-    std::fstream file(path.toStdString(),std::ios::app);
-
-        nlohmann::ordered_json json = {
-            {"idioma",},
-            {"version",}
-
+    QFile filew(path);
+    if (filew.exists() == true) {
+        filew.remove();
+    }
+      std::fstream file(path.toStdString(),std::ios::app);
+       auto idioma = info.idioma;
+        nlohmann::json json = {
+            {"idioma" ,idioma.toStdString()}
         };
-
-
+        file << json.dump(0);
     if (file.is_open()) {
         file.close();
         return true;
@@ -46,11 +60,17 @@ bool FileManger::save(QString path,Info_config info) {
     if (file.fail()) {
         return false;
     }
+
+    return  false;
 }
 bool FileManger::save(QString path,std::vector<Oitem> obj) {
 
     if (path.isEmpty() == true || obj.empty() == true) {
         return false;
+    }
+    QFile filew(path);
+    if (filew.exists() == true) {
+        filew.remove();
     }
     std::fstream file(path.toStdString(),std::ios::app);
        if (obj.empty() == false) {
@@ -65,8 +85,8 @@ bool FileManger::save(QString path,std::vector<Oitem> obj) {
                    {"N2",value.N2},
                };
                json.push_back(basic_json);
-           file << json.dump(4);
        }
+           file << json.dump(4);
            if (file.is_open()) {
                file.close();
                return true;

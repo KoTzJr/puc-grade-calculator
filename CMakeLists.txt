@@ -41,12 +41,14 @@ add_executable(AvaliacaoDaPuc
         include/ListDataItens.h
         src/FileManger.cpp
         include/FileManger.h
-        include/GlobalVariables.h
         src/option.cpp
         include/option.h
         option.ui
-        src/Info_config.cpp
         include/Info_config.h
+        src/idioma_ui.cpp
+        include/idioma_ui.h
+        src/global_acess.cpp
+        include/global_acess.h
 )
 
 # -------------------------

@@ -4,11 +4,8 @@
 
 #ifndef DATAITENS_H
 #define DATAITENS_H
-#include <QRandomGenerator>
-#include <string>
-#include <vector>
+
 #include <QString>
-#include <FileManger.h>
 
 struct Oitem {
     uint id;

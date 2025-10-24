@@ -11,16 +11,17 @@
 #include <QFileDialog>
 #include "../include/_windows_.h"
 #include "../include/ListDataItens.h"
-#include "GlobalVariables.h"
 #include "../cmake-build-debug/AvaliacaoDaPuc_autogen/include/ui__windows_.h"
-
-
 #include "FileManger.h"
+#include "_ui_.h"
+#include "global_acess.h"
+#include "idioma_ui.h"
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class _windows_; }
 QT_END_NAMESPACE
 
-class _windows_ : public QMainWindow {
+class _windows_ : public QMainWindow  {
     Q_OBJECT
 
     public:
@@ -50,12 +51,11 @@ private:
     std::vector<Oitem>  sets;
 
     QString patch_load;
-    //Oitem teste;
-
     _FILE_ info_file;
+     option *op;
+    nlohmann::json system_json;
 
     bool is_open;
 
 };
-
 #endif //_WINDOWS__H
