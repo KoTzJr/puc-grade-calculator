@@ -6,8 +6,8 @@
 #define AVALIACAODAPUC_GLOBAL_ACESS_H
 
 #include  <QString>
-#include  <LanguageUI.h>
-#include  "InfoSystemDebug.h"
+#include  "ui/LanguageUI.h"
+#include  "utils/InfoSystemDebug.h"
 
 namespace GLOBAL {
      extern   QString idioma;

@@ -2,11 +2,11 @@
 // Created by KoTz on 23/10/2025.
 //
 
-#include "LanguageUI.h"
-#include <PreferenceSystem.h>
+#include "ui/LanguageUI.h"
+#include "ui/PreferenceSystem.h"
 #include <ui_option.h>
-#include "FileManager.h"
-#include "GlobalAccess.h"
+#include "io/FileManager.h"
+#include "utils/GlobalAccess.h"
 
 idioma_ui::idioma_ui() {
 

@@ -2,18 +2,17 @@
 #define _WINDOWS__H
 
 #include <QTimer>
-#include "GradeSystem.h"
-#include "UIManager.h"
-#include  <ListDataItems.h>
-#include "PreferenceSystem.h"
+#include "core/GradeSystem.h"
+#include "ui/UIManager.h"
+#include "data/ListDataItems.h"
+#include "ui/PreferenceSystem.h"
 #include <string>
 #include <fmt/core.h>
 #include <QFileDialog>
 #include "ui_MainWindow.h"
-#include "FileManager.h"
-#include "UIManager.h"
-#include "GlobalAccess.h"
-#include "LanguageUI.h"
+#include "io/FileManager.h"
+#include "utils/GlobalAccess.h"
+#include "ui/LanguageUI.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class _windows_; }

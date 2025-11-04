@@ -5,9 +5,9 @@
 // You may need to build the project (run Qt uic code generator) to get "ui__windows_.h" resolved
 
 
-#include "MainWindow.h"
+#include "ui/MainWindow.h"
 #include "ui_MainWindow.h"
-#include "InfoWindow.h"
+#include "ui/InfoWindow.h"
 
 void _windows_::on_btn_infoSystem_clicked() {
      info_window *info = new info_window(this);

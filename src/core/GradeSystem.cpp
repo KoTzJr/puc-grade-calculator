@@ -2,7 +2,7 @@
 // Created by KoTz on 28/06/2025.
 //
 
-#include "GradeSystem.h"
+#include "core/GradeSystem.h"
 
 
 

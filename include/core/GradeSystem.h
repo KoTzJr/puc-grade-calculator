@@ -7,8 +7,8 @@
 
 #include <QTableWidget>
 #include <fmt/format.h>
-#include "UIManager.h"
-#include "ListDataItems.h"
+#include "ui/UIManager.h"
+#include "data/ListDataItems.h"
 
 class system_nota {
 private :

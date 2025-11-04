@@ -2,9 +2,9 @@
 // Created by kotz on 04/11/2025.
 //
 
-#include "InfoSystemDebug.h"
+#include "utils/InfoSystemDebug.h"
 
-#include "FileManager.h"
+#include "io/FileManager.h"
 
 
 InfoSystemDebug::InfoSystemDebug() {
