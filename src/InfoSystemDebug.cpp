@@ -4,7 +4,7 @@
 
 #include "../include/InfoSystemDebug.h"
 
-#include "FileManger.h"
+#include "FileManager.h"
 
 
 InfoSystemDebug::InfoSystemDebug() {

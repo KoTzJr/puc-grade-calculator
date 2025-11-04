@@ -6,8 +6,8 @@
 
 #include "../include/PreferenceSystem.h"
 #include "ui_option.h"
-#include "FileManger.h"
-#include <global_acess.h>
+#include "FileManager.h"
+#include <GlobalAccess.h>
 
 
 
