@@ -2,11 +2,11 @@
 // Created by KoTz on 25/07/2025.
 //
 
-#include "../include/FileManger.h"
+#include "../include/FileManager.h"
 
 #include <qurl.h>
 
-#include "ListDataItens.h"
+#include "ListDataItems.h"
 
 bool FileManger::Load(QString path,Json & get_json) {
     if (path.isEmpty() == true) {

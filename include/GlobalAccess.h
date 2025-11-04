@@ -6,7 +6,7 @@
 #define AVALIACAODAPUC_GLOBAL_ACESS_H
 
 #include  <QString>
-#include  <idioma_ui.h>
+#include  <LanguageUI.h>
 #include  "InfoSystemDebug.h"
 
 namespace GLOBAL {

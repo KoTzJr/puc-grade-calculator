@@ -6,11 +6,11 @@
 #define FILEMANGER_H
 
 #include <QFile>
-#include "ListDataItens.h"
+#include "ListDataItems.h"
 #include <nlohmann/json.hpp>
 #include <fstream>
 #include <QDebug>
-#include <Info_config.h>
+#include <InfoConfig.h>
 
 
 enum OPTION {

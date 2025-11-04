@@ -6,7 +6,7 @@
 #define AVALIACAODAPUC_IDIOMA_UI_H
 
 
-#include <ui__windows_.h>
+#include <ui_MainWindow.h>
 #include <nlohmann/json.hpp>
 #include <ui_option.h>
 

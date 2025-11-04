@@ -4,12 +4,12 @@
 
 // You may need to build the project (run Qt uic code generator) to get "ui_info_window.h" resolved
 
-#include "../include/info_window.h"
+#include "../include/InfoWindow.h"
 
 #include <QLabel>
 
-#include "global_acess.h"
-#include "ui_info_window.h"
+#include "GlobalAccess.h"
+#include "ui_InfoWindow.h"
 
 
 info_window::info_window(QWidget *parent) : QMainWindow(parent), ui(new Ui::info_window) {

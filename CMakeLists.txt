@@ -29,29 +29,29 @@ set(CMAKE_AUTOUIC_SEARCH_PATHS ${CMAKE_SOURCE_DIR} ${CMAKE_SOURCE_DIR}/src)
 # -------------------------
 add_executable(AvaliacaoDaPuc
         src/main.cpp
-        _windows_.ui
-        src/_windows_.cpp
-        include/_windows_.h
-        src/system_nota.cpp
-        include/system_nota.h
-        src/_ui_.cpp
-        include/_ui_.h
+        MainWindow.ui
+        src/MainWindow.cpp
+        include/MainWindow.h
+        src/GradeSystem.cpp
+        include/GradeSystem.h
+        src/UIManager.cpp
+        include/UIManager.h
         resources.qrc
-        src/ListDataItens.cpp
-        include/ListDataItens.h
-        src/FileManger.cpp
-        include/FileManger.h
+        src/ListDataItems.cpp
+        include/ListDataItems.h
+        src/FileManager.cpp
+        include/FileManager.h
         src/PreferenceSystem.cpp
         include/PreferenceSystem.h
         option.ui
-        include/Info_config.h
-        src/idioma_ui.cpp
-        include/idioma_ui.h
-        src/global_acess.cpp
-        include/global_acess.h
-        src/info_window.cpp
-        include/info_window.h
-        info_window.ui
+        include/InfoConfig.h
+        src/LanguageUI.cpp
+        include/LanguageUI.h
+        src/GlobalAccess.cpp
+        include/GlobalAccess.h
+        src/InfoWindow.cpp
+        include/InfoWindow.h
+        InfoWindow.ui
         src/InfoSystemDebug.cpp
         include/InfoSystemDebug.h
 )

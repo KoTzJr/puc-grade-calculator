@@ -2,7 +2,7 @@
 // Created by KoTz on 30/06/2025.
 //
 
-#include "../include/_ui_.h"
+#include "../include/UIManager.h"
 
 void Style_Table::Style::table_result(QTableWidget *ui,int index,int ps) {
      if (ui != nullptr) {
