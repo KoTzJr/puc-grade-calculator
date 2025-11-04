@@ -2,7 +2,7 @@
 // Created by KoTz on 25/07/2025.
 //
 
-#include "../include/FileManager.h"
+#include "FileManager.h"
 
 #include <qurl.h>
 

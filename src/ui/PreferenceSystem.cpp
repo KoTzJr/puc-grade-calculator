@@ -4,7 +4,7 @@
 
 // You may need to build the project (run Qt uic code generator) to get "ui_option.h" resolved
 
-#include "../include/PreferenceSystem.h"
+#include "PreferenceSystem.h"
 #include "ui_option.h"
 #include "FileManager.h"
 #include <GlobalAccess.h>

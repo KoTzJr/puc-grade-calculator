@@ -9,9 +9,7 @@
 #include <string>
 #include <fmt/core.h>
 #include <QFileDialog>
-#include "../include/MainWindow.h"
-#include "../include/ListDataItems.h"
-#include "../cmake-build-debug/AvaliacaoDaPuc_autogen/include/ui_MainWindow.h"
+#include "ui_MainWindow.h"
 #include "FileManager.h"
 #include "UIManager.h"
 #include "GlobalAccess.h"

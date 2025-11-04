@@ -5,8 +5,8 @@
 // You may need to build the project (run Qt uic code generator) to get "ui__windows_.h" resolved
 
 
-#include "../include/MainWindow.h"
-#include "../cmake-build-debug/AvaliacaoDaPuc_autogen/include/ui_MainWindow.h"
+#include "MainWindow.h"
+#include "ui_MainWindow.h"
 #include "InfoWindow.h"
 
 void _windows_::on_btn_infoSystem_clicked() {

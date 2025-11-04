@@ -2,7 +2,7 @@
 // Created by kotz on 04/11/2025.
 //
 
-#include "../include/InfoSystemDebug.h"
+#include "InfoSystemDebug.h"
 
 #include "FileManager.h"
 
