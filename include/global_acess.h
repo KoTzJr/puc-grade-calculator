@@ -7,6 +7,7 @@
 
 #include  <QString>
 #include  <idioma_ui.h>
+#include  "InfoSystemDebug.h"
 
 namespace GLOBAL {
      extern   QString idioma;
@@ -15,6 +16,9 @@ namespace GLOBAL {
      extern   Ui::option   *_ui_option;
      extern   void init_global(Ui::_windows_ * windows);
      extern   void init_global(Ui::option  * option);
+     namespace ARRAY {
+          extern   std::vector<InfoSystemDebug> info_debugs;
+     }
 }
 
 

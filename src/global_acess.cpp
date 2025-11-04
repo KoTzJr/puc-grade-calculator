@@ -20,4 +20,7 @@ namespace GLOBAL {
             _ui_option = option;
         }
     }
+    namespace ARRAY {
+        std::vector<InfoSystemDebug> info_debugs;
+    }
 }

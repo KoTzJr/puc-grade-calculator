@@ -21,7 +21,9 @@
       "projeto teste": "Test Project",
       "pucsimual": "PUCsimual",
       "opção": "Option",
-      "aplicar": "Apply"
+      "aplicar": "Apply",
+      "salvo" : "Save",
+      "não sucesso" : "no save"
     },
     "Portugues" : {
       "file": "Arquivo",
@@ -45,7 +47,9 @@
       "test project": "Projeto Teste",
       "pucsimual": "PUCsimual",
       "option": "opção",
-      "apply": "Aplicar"
+      "apply": "Aplicar",
+      "save" : "Salvo",
+      "no sucess" : "Não Salvo"
      }
 
 }

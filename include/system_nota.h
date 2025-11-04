@@ -6,7 +6,8 @@
 #define SYSTEM_NOTA_H
 
 #include <QTableWidget>
-
+#include <fmt/format.h>
+#include "../include/_ui_.h"
 #include "ListDataItens.h"
 
 class system_nota {

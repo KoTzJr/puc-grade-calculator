@@ -3,8 +3,8 @@
 //
 
 #include "../include/system_nota.h"
-#include <fmt/format.h>
-#include "../include/_ui_.h"
+
+
 
 void system_nota::FormulaParaMedia(bool N1_menor, bool n2_menor, bool iguais,int row) {
 

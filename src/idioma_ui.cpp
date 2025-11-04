@@ -3,7 +3,7 @@
 //
 
 #include "idioma_ui.h"
-#include <option.h>
+#include <PreferenceSystem.h>
 #include <ui_option.h>
 #include "FileManger.h"
 #include "global_acess.h"

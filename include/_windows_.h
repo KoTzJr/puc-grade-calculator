@@ -5,7 +5,7 @@
 #include "system_nota.h"
 #include "_ui_.h"
 #include  <ListDataItens.h>
-#include "option.h"
+#include "PreferenceSystem.h"
 #include <string>
 #include <fmt/core.h>
 #include <QFileDialog>
@@ -37,6 +37,9 @@ private slots:
     void on_actionNovo_triggered();
     void on_actionSalvar_triggered();
     void on_actionSalvar_como_triggered();
+
+
+    void on_btn_infoSystem_clicked();
 
     void on_actionOpition_triggered();
 

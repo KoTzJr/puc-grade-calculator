@@ -7,6 +7,13 @@
 
 #include "../include/_windows_.h"
 #include "../cmake-build-debug/AvaliacaoDaPuc_autogen/include/ui__windows_.h"
+#include "info_window.h"
+
+void _windows_::on_btn_infoSystem_clicked() {
+     info_window *info = new info_window(this);
+     info->show();
+}
+
 
 void _windows_::Update_table_data() {
     if (ui->tableWidget->rowCount() == 0 && ui->tableWidget->columnCount() == 0) {
@@ -213,9 +220,11 @@ void _windows_::on_actionAbrir_triggered() {
         qDebug() << e.what();
     }
     if (is_file_aluno == true) {
-        ui->info_arquivo->setText("Arquivo aberto: "+ openFileUrl.fileName());
-        info_file.fileName = openFileUrl.toLocalFile();
-        info_file.isFileOpen = is_open;
+         QString info = "Arquivo aberto: "+ openFileUrl.fileName();
+         GLOBAL::ARRAY::info_debugs.push_back(InfoSystemDebug{info,""});
+         ui->info_arquivo->setText("Arquivo aberto: "+ openFileUrl.fileName());
+         info_file.fileName = openFileUrl.toLocalFile();
+         info_file.isFileOpen = is_open;
     }
     delete newDialog;
 }
