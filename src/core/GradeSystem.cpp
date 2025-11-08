@@ -2,11 +2,9 @@
 // Created by KoTz on 28/06/2025.
 //
 
-#include "../include/GradeSystem.h"
+#include "core/GradeSystem.h"
 
-
-
-void system_nota::FormulaParaMedia(bool N1_menor, bool n2_menor, bool iguais,int row) {
+void GradeSystem::FormulaParaMedia(bool N1_menor, bool n2_menor, bool iguais,int row) {
 
     double N1 = this->N1, N2 = this->N2,NF = this->nota_final;
     QString is = "";
@@ -50,14 +48,14 @@ void system_nota::FormulaParaMedia(bool N1_menor, bool n2_menor, bool iguais,int
     }
 }
 
-void  system_nota::sets_todas_atividades(double n1,double n2,double IA) {
+void  GradeSystem::sets_todas_atividades(double n1,double n2,double IA) {
     this->N1 = n1;
     this->N2 = n2;
 
     this->IA = IA;
 }
 
-void system_nota::sets_todas_atividades(int aula_prevista, int aula_ministradas, int numero_presenca,double n1,double n2,double IA) {
+void GradeSystem::sets_todas_atividades(int aula_prevista, int aula_ministradas, int numero_presenca,double n1,double n2,double IA) {
     this->aula_ministradas = aula_ministradas;
     this->aula_prevista    = aula_prevista;
     this->numero_presenca  = numero_presenca;
@@ -68,7 +66,7 @@ void system_nota::sets_todas_atividades(int aula_prevista, int aula_ministradas,
     this->IA = IA;
 }
 
-void  system_nota::Quantidade_faltas(int index,QTableWidget *ui) {
+void  GradeSystem::Quantidade_faltas(int index,QTableWidget *ui) {
     if (ui == nullptr) {
         return;
     }
@@ -80,7 +78,7 @@ void  system_nota::Quantidade_faltas(int index,QTableWidget *ui) {
      this->result_presenca = (double)this->numero_presenca/(double)this->aula_ministradas*100;
 }
 
-void system_nota::FaltouMedia(double n1, double n2, double NFs, int row) {
+void GradeSystem::FaltouMedia(double n1, double n2, double NFs, int row) {
     bool n1_menor = false, n2_menor = false;
 
     // Se a nota final for maior ou igual a 6, limpa o texto e retorna
@@ -118,7 +116,7 @@ void system_nota::FaltouMedia(double n1, double n2, double NFs, int row) {
  * @param NF Nota Final (retornado por referência)
  * @param AI Avaliação Individual (opcional)
  */
-void system_nota::Formula_Avaliacao(double n1, double n2 , double  &NF, double  AI) {
+void GradeSystem::Formula_Avaliacao(double n1, double n2 , double  &NF, double  AI) {
     if (n1 > 10.0 || n2 > 10.0) {
         return;
     }
@@ -133,7 +131,7 @@ void system_nota::Formula_Avaliacao(double n1, double n2 , double  &NF, double  
     this->nota_final = NF;
 }
 
-Oitem system_nota::get_todas_() const {
+Oitem GradeSystem::Get_All() const {
      return Oitem(this->Nome,this->aula_prevista,this->aula_ministradas,this->numero_presenca,this->N1,this->N2);
 }
 /**
@@ -143,7 +141,7 @@ Oitem system_nota::get_todas_() const {
  * @param n2 Nota 2
  * @param NF Nota Final (retornado por referência)
  */
-void system_nota::Formula_Avaliacao(double  n1, double  n2, double  &NF) {
+void GradeSystem::Formula_Avaliacao(double  n1, double  n2, double  &NF) {
     if (n1 >= 10.0 || n2 >= 10.0) {
         return;
     }
@@ -163,7 +161,7 @@ void system_nota::Formula_Avaliacao(double  n1, double  n2, double  &NF) {
  * - Médias e resultados são zerados
  * - Nota de IA (Avaliação Individual) é zerada
  */
-void system_nota::clear_table() {
+void GradeSystem::clear_table_grade() {
     N1 = 0.0f;
     N2 = 0.0f;
     aula_prevista = 0;
@@ -183,7 +181,7 @@ void system_nota::clear_table() {
  * - Se 0 < NF < 6, reprovado
  * @param indexItem Índice da linha na tabela
  */
-void system_nota::processGradeResult(int indexItem) {
+void GradeSystem::processGradeResult(int indexItem) {
     double NF = 0.0f;
     Formula_Avaliacao(this->N1, this->N2, NF, this->IA);
 
@@ -197,15 +195,12 @@ void system_nota::processGradeResult(int indexItem) {
     }
     if (NF >= 6.0 || NF >= 6 || NF >= 6.0 - 1e-9) {
         Style_Table::Style::table_result(item, indexItem, 1);
-
-
     }else if (NF < 6.0-1e-9 && NF > 0.0- 1e-9) {
         Style_Table::Style::table_result(item, indexItem, 2);
     }
     if (result_presenca != 0.0 || result_presenca != 0.0f) {
         if (this->result_presenca <= 75.0 - 1e-9 && this->result_presenca >= 0.0- 1e-9) {
             Style_Table::Style::table_result(item, indexItem, 0);
-            qDebug () << "teste_3";
         }
     }
 }
@@ -216,7 +211,7 @@ void system_nota::processGradeResult(int indexItem) {
  * ou se ambas estiverem vazias
  * Retorna true se ambas contiverem números com ponto decimal
  */
-bool system_nota::is_verifiqueCacterece(int pos){
+bool GradeSystem::is_verifiqueCacterece(int pos){
     int asvezes_pontos_n1 =0,asvezez_pontos_n2 =0;
 
     bool isalpha_n1 = false, isalpha_n2 = false;
@@ -275,10 +270,23 @@ bool system_nota::is_verifiqueCacterece(int pos){
     return false;
 }
 
-system_nota::system_nota():N1(0.0f),N2(0.0f),item(nullptr),media(0.0f),nota_final(0.0f),aula_ministradas(0),aula_prevista(0),numero_presenca(0){
+GradeSystem::GradeSystem():
+                 N1(0.0f),
+                 N2(0.0f),item(nullptr),
+                 media(0.0f),
+                 nota_final(0.0f),
+                 aula_ministradas(0),
+                 aula_prevista(0),
+                 numero_presenca(0){}
 
-}
-system_nota::system_nota(QTableWidget *obj):N1(0.0f),N2(0.0f),item(nullptr),media(0.0f),nota_final(0.0f),aula_ministradas(0),aula_prevista(0),numero_presenca(0){
+GradeSystem::GradeSystem(QTableWidget *obj):
+                N1(0.0f),N2(0.0f),
+                item(nullptr),
+                media(0.0f),
+                nota_final(0.0f),
+                aula_ministradas(0),
+                aula_prevista(0),
+                numero_presenca(0){
      if (obj != nullptr) {
         this->item = obj;
      }

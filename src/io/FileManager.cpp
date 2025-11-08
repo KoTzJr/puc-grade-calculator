@@ -2,11 +2,35 @@
 // Created by KoTz on 25/07/2025.
 //
 
-#include "../include/FileManager.h"
+#include "io/FileManager.h"
 
-#include <qurl.h>
+void FileManger::initialize_file_manager() {
+    QString patch =  QDir::homePath() + "/Documents/PUCSimulador";
+    std::filesystem::path path = patch.toStdString();
 
-#include "ListDataItems.h"
+    if (std::filesystem::exists(path) == true && QFile{patch + "/config.json"}.exists() == true
+        && is_null_fileJson(patch + "/config.json") == false)
+    {
+        return;
+    }
+    std::filesystem::create_directories(patch.toStdString());
+    std::ofstream file(patch.toStdString() + "/config.json");
+    save(patch + "/config.json",Info_config{"Português"});
+}
+
+
+bool FileManger::is_null_fileJson(QString path) {
+     QFile file(path);
+     file.open(QFile::ReadOnly | QFile::Text);
+     nlohmann::json json;
+    try {
+        json = nlohmann::json::parse(file.readAll().toStdString());
+    }catch (nlohmann::json::exception & e) {
+        return true;
+    }
+     return false;
+}
+
 
 bool FileManger::Load(QString path,Json & get_json) {
     if (path.isEmpty() == true) {
@@ -17,7 +41,12 @@ bool FileManger::Load(QString path,Json & get_json) {
         return false;
     }
     file.open(QIODevice::ReadOnly | QIODevice::Text);
-    get_json = nlohmann::json::parse(file.readAll().toStdString());
+    try {
+        get_json = nlohmann::json::parse(file.readAll().toStdString());
+
+    }catch (nlohmann::json::exception & e) {
+
+    }
     return true;
 }
 
@@ -97,6 +126,4 @@ bool FileManger::save(QString path,std::vector<Oitem> obj) {
    }
     return false;
 }
-FileManger::FileManger() {
-
-}
+FileManger::FileManger() {}

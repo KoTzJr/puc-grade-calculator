@@ -7,10 +7,10 @@
 
 #include <QTableWidget>
 #include <fmt/format.h>
-#include "../include/UIManager.h"
-#include "ListDataItems.h"
+#include "ui/UIManager.h"
+#include "data/ListDataItems.h"
 
-class system_nota {
+class GradeSystem {
 private :
     QString Nome;
     double N1;
@@ -40,13 +40,13 @@ public :
        void sets_todas_atividades(double n1,double n2,double IA);
 
 
-       Oitem get_todas_() const;
+       Oitem Get_All() const;
 
-       void clear_table();
+       void clear_table_grade();
 
 
-      system_nota();
-      system_nota(QTableWidget * obj);
+      GradeSystem();
+      GradeSystem(QTableWidget * obj);
 
 };
 

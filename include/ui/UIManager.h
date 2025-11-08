@@ -20,7 +20,7 @@ namespace Style_Table {
 
 }
 
-class _ui_ {
+class ui_controller {
 private:
     Ui::_windows_ *ui;
 public:

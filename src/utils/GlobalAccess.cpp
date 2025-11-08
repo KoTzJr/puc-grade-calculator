@@ -2,7 +2,7 @@
 // Created by KoTz on 24/10/2025.
 //
 
-#include "GlobalAccess.h"
+#include "utils/GlobalAccess.h"
 
 
 namespace GLOBAL {

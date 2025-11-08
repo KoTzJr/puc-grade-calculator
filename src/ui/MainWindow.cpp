@@ -5,16 +5,13 @@
 // You may need to build the project (run Qt uic code generator) to get "ui__windows_.h" resolved
 
 
-#include "../include/MainWindow.h"
-#include "../cmake-build-debug/AvaliacaoDaPuc_autogen/include/ui_MainWindow.h"
-#include "InfoWindow.h"
+#include "ui/MainWindow.h"
+#include "ui/InfoWindow.h"
 
 void _windows_::on_btn_infoSystem_clicked() {
      info_window *info = new info_window(this);
      info->show();
 }
-
-
 void _windows_::Update_table_data() {
     if (ui->tableWidget->rowCount() == 0 && ui->tableWidget->columnCount() == 0) {
         return;
@@ -33,7 +30,7 @@ void _windows_::Update_table_data() {
             {
                 this->system_nota_->processGradeResult(index_item);
             }
-            this->system_nota_->clear_table();
+            this->system_nota_->clear_table_grade();
         }
     }
 }
@@ -54,19 +51,37 @@ void _windows_::Update() {
  */
 _windows_::_windows_(QWidget *parent) : QMainWindow(parent), ui(new Ui::_windows_) {
     ui->setupUi(this);
-    this->is = new _ui_;
+    this->is = new ui_controller;
+    FileManger::initialize_file_manager();
     GLOBAL::init_global(ui);
     is->UI_init(this->ui); // Inicializa a interface do usuário passando o ponteiro ui para a classe _ui_
     is->_botao_();
-    FileManger::Load("C:\\Users\\KoTz\\Documents\\GitHub\\puc-grade-calculator\\cmake-build-debug-visual-studio\\config.json",system_json);
-    idioma_ui::set_ui_idioma(system_json,this->ui,GLOBAL::idioma);
-    system_nota_ = new system_nota(ui->tableWidget);
+    FileManger::Load(GLOBAL::PATCH_FILE::config,system_json);
+    LanguageUI::initialize_language_ui(system_json,this->ui,GLOBAL::idioma);
+    system_nota_ = new GradeSystem(ui->tableWidget);
     this->timer = new QTimer(this);
     timer->setInterval(16);
     connect(timer, SIGNAL(timeout()), this, SLOT(Update()));
     timer->start();
 }
-void _windows_::info_save(QString get,int x) {
+/**
+ * Salva as informações da tabela em um arquivo
+ *
+ * Esta função coleta os dados de todas as linhas da tabela (nome, aulas previstas,
+ * aulas ministradas, presenças e notas) e os salva em um arquivo JSON. O salvamento
+ * pode ser feito de 3 formas diferentes:
+ *
+ * 1. Salvamento no arquivo atual (se houver um arquivo aberto)
+ * 2. Salvamento com "Salvar como" em um novo arquivo (TYPE_SAVE::SAVE_AS)
+ * 3. Salvamento no arquivo local padrão (TYPE_SAVE::SAVE_LOCAL_FILE)
+ *
+ * @param path Caminho do arquivo onde será salvo (usado apenas para SAVE_AS)
+ * @param value Tipo de salvamento a ser realizado (SAVE_AS ou SAVE_LOCAL_FILE)
+ *
+ * @note A função atualiza um label na interface indicando sucesso ou falha do salvamento
+ * @note Se a tabela estiver vazia, a função retorna sem fazer nada
+ */
+void _windows_::info_save(QString path,TYPE_SAVE value) {
     bool is_file_save = false;
 
    if (ui->tableWidget->rowCount() == 0) {
@@ -79,22 +94,21 @@ void _windows_::info_save(QString get,int x) {
         auto numero_presenca = ui->tableWidget->item(index_item, 3)->text().toInt();
         auto N1 = ui->tableWidget->item(index_item, 4)->text().toDouble();
         auto N2 = ui->tableWidget->item(index_item, 5)->text().toDouble();
-        sets.push_back(Oitem(nome,aula_prevista,aula_ministradas,numero_presenca,N1,N2));
+        item_list_.push_back(Oitem(nome,aula_prevista,aula_ministradas,numero_presenca,N1,N2));
     }
     ui->label_3->clear();
-    if (info_file.fileName.isEmpty() == false && is_open == true) {
+    if (info_file.fileName.isEmpty() == false && is_file_open == true) {
         QFile outputFile(info_file.fileName);
         if (outputFile.exists() == true) {
             outputFile.remove();
         }
-        is_file_save = FileManger::save(info_file.fileName,sets) ;
-        x = -9;
+        is_file_save = FileManger::save(info_file.fileName,item_list_);
     }
-   if (x == 0) {
-        is_file_save = FileManger::save(get,sets) ;
+   if (value == TYPE_SAVE::SAVE_AS) {
+        is_file_save = FileManger::save(path,item_list_);
    }
-    if (x == 1) {
-        is_file_save = FileManger::save("data.json",sets) ;
+    if (value == TYPE_SAVE::SAVE_LOCAL_FILE) {
+        is_file_save = FileManger::save(GLOBAL::PATCH_FILE::Data,item_list_) ;
     }
     if (is_file_save) {
         ui->label_3->setText("Salvo !");
@@ -102,20 +116,18 @@ void _windows_::info_save(QString get,int x) {
     else {
         ui->label_3->setText("Falha de salvamento");
     }
-    sets.clear();
-
+    item_list_.clear();
 }
 
 void _windows_::on_actionOpition_triggered() {
     op = new option(this);
-    op->show();
+     op->show();
 }
 
 
 
 void _windows_::on_actionSalvar_como_triggered() {
-
-    QFileDialog *fileDialog = new QFileDialog(this);
+    std::unique_ptr<QFileDialog> fileDialog = std::make_unique<QFileDialog>(this);
     auto selectedFile = fileDialog->getSaveFileName(this,"Salvar o arquivo","","");
 
     std::string filePath = selectedFile.toStdString();
@@ -124,13 +136,10 @@ void _windows_::on_actionSalvar_como_triggered() {
          selectedFile = QString::fromStdString(filePath);
     }
     if (selectedFile!= nullptr && filePath.find(".json") != std::string::npos) {
-         info_save(selectedFile,0);
+         info_save(selectedFile,SAVE_AS);
 
     }else {
         ui->label_3->setText("Falha de salvamento necessario Json ");
-    }
-    if (fileDialog != nullptr) {
-        delete fileDialog;
     }
 }
 /**
@@ -151,7 +160,7 @@ QString removeDoubleQuotes(QString str) {
  * com id, nome e notas de cada aluno
  */
 void _windows_::on_actionSalvar_triggered() {
-     info_save("",1);
+     info_save("",SAVE_LOCAL_FILE);
 }
 /**
  * Função chamada quando a opção "Abrir" é acionada
@@ -161,7 +170,7 @@ void _windows_::on_actionSalvar_triggered() {
 void _windows_::on_actionAbrir_triggered() {
     FileManger file;
     bool is_file_aluno = false;
-    QFileDialog *newDialog = new QFileDialog(this);
+    std::unique_ptr<QFileDialog> newDialog = std::make_unique<QFileDialog>(this);
     auto openFileUrl = newDialog->getOpenFileUrl(this, "Abrir JSON", QUrl(), "Arquivos JSON (*.json)");
     nlohmann::json get_json = {};
 
@@ -172,7 +181,7 @@ void _windows_::on_actionAbrir_triggered() {
     }
     bool isLoadSuccessful = false;
     if (openFileUrl.isValid() == true) {
-        isLoadSuccessful = FileManger::Load(openFileUrl.toLocalFile(),get_json,is_open);
+        isLoadSuccessful = FileManger::Load(openFileUrl.toLocalFile(),get_json,is_file_open);
     }
      if (isLoadSuccessful == false) {
         return;
@@ -215,7 +224,6 @@ void _windows_::on_actionAbrir_triggered() {
                 is_file_aluno = true;
             }
         }
-
     }catch (std::exception &e) {
         qDebug() << e.what();
     }
@@ -224,12 +232,9 @@ void _windows_::on_actionAbrir_triggered() {
          GLOBAL::ARRAY::info_debugs.push_back(InfoSystemDebug{info,""});
          ui->info_arquivo->setText("Arquivo aberto: "+ openFileUrl.fileName());
          info_file.fileName = openFileUrl.toLocalFile();
-         info_file.isFileOpen = is_open;
+         info_file.isFileOpen = is_file_open;
     }
-    delete newDialog;
 }
-
-
 /**
  * Função chamada quando a opção "Novo" é acionada
  * Cria uma nova janela do programa como filha da janela atual
@@ -273,8 +278,6 @@ void _windows_::on_btn_add_clicked() {
     ui->tableWidget->item(0,6)->setFlags(Qt::ItemIsEnabled);
     ui->tableWidget->item(0,7)->setFlags(Qt::ItemIsEnabled);
     ui->tableWidget->item(0,8)->setFlags(Qt::ItemIsEnabled);
-
-    i++;
 }
 /**
  * Função chamada quando o botão "Remover" é clicado
@@ -282,12 +285,12 @@ void _windows_::on_btn_add_clicked() {
  */
 void _windows_::on_btn_remover_clicked() {
    bool is_Selected = false;
-   auto i =  ui->tableWidget->selectedItems();
-    if (i.isEmpty() == false) {
-        if (i.at(1)->tableWidget() == nullptr) {
+   auto itemList =  ui->tableWidget->selectedItems();
+    if (itemList.isEmpty() == false) {
+        if (itemList.at(1)->tableWidget() == nullptr) {
             return;
         }
-        auto index =  i.at(1)->row();
+        auto index =  itemList.at(1)->row();
         ui->tableWidget->removeRow(index);
         is_Selected = true;
     }

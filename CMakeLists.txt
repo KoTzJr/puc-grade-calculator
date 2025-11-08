@@ -19,7 +19,14 @@ find_package(nlohmann_json CONFIG REQUIRED) ## JSON
 # -------------------------
 # Includes
 # -------------------------
-include_directories(${CMAKE_SOURCE_DIR}/include)
+include_directories(
+    ${CMAKE_SOURCE_DIR}/include
+    ${CMAKE_SOURCE_DIR}/include/core
+    ${CMAKE_SOURCE_DIR}/include/data
+    ${CMAKE_SOURCE_DIR}/include/io
+    ${CMAKE_SOURCE_DIR}/include/ui
+    ${CMAKE_SOURCE_DIR}/include/utils
+)
 
 # Caminho de UI
 set(CMAKE_AUTOUIC_SEARCH_PATHS ${CMAKE_SOURCE_DIR} ${CMAKE_SOURCE_DIR}/src)
@@ -28,32 +35,45 @@ set(CMAKE_AUTOUIC_SEARCH_PATHS ${CMAKE_SOURCE_DIR} ${CMAKE_SOURCE_DIR}/src)
 # Executável
 # -------------------------
 add_executable(AvaliacaoDaPuc
-        src/main.cpp
+        # UI files
         MainWindow.ui
-        src/MainWindow.cpp
-        include/MainWindow.h
-        src/GradeSystem.cpp
-        include/GradeSystem.h
-        src/UIManager.cpp
-        include/UIManager.h
-        resources.qrc
-        src/ListDataItems.cpp
-        include/ListDataItems.h
-        src/FileManager.cpp
-        include/FileManager.h
-        src/PreferenceSystem.cpp
-        include/PreferenceSystem.h
-        option.ui
-        include/InfoConfig.h
-        src/LanguageUI.cpp
-        include/LanguageUI.h
-        src/GlobalAccess.cpp
-        include/GlobalAccess.h
-        src/InfoWindow.cpp
-        include/InfoWindow.h
         InfoWindow.ui
-        src/InfoSystemDebug.cpp
-        include/InfoSystemDebug.h
+        option.ui
+        resources.qrc
+
+        # Main entry point
+        src/ui/main.cpp
+
+        # Core - Business Logic
+        src/core/GradeSystem.cpp
+        include/core/GradeSystem.h
+
+        # Data - Models
+        src/data/ListDataItems.cpp
+        include/data/ListDataItems.h
+        include/data/InfoConfig.h
+
+        # IO - File Operations
+        src/io/FileManager.cpp
+        include/io/FileManager.h
+
+        # UI - Interface
+        src/ui/MainWindow.cpp
+        include/ui/MainWindow.h
+        src/ui/InfoWindow.cpp
+        include/ui/InfoWindow.h
+        src/ui/UIManager.cpp
+        include/ui/UIManager.h
+        src/ui/LanguageUI.cpp
+        include/ui/LanguageUI.h
+        src/ui/PreferenceSystem.cpp
+        include/ui/PreferenceSystem.h
+
+        # Utils - Utilities
+        src/utils/GlobalAccess.cpp
+        include/utils/GlobalAccess.h
+        src/utils/InfoSystemDebug.cpp
+        include/utils/InfoSystemDebug.h
 )
 
 # -------------------------

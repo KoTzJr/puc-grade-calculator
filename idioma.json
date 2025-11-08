@@ -20,12 +20,17 @@
       "falta media": "Needed Avg",
       "projeto teste": "Test Project",
       "pucsimual": "PUCsimual",
-      "opção": "Option",
       "aplicar": "Apply",
-      "salvo" : "Save",
-      "não sucesso" : "no save"
+      "Sistema de Preferencia" : "Preference System",
+      "Aprovado" : "Approved",
+      "Reprovado" : "Failed",
+      "Tema" : "Theme",
+      "Fonte" : "Font"
     },
-    "Portugues" : {
+    "Português" : {
+      "Approved" : "Aprovado",
+      "Failed" : "Reprovado",
+      "PreferenceSystem" : "Sistema de Preferencia",
       "file": "Arquivo",
       "new": "Novo",
       "open": "Abrir",
@@ -44,12 +49,13 @@
       "average": "Média",
       "result": "Resultado",
       "needed avg": "Falta Média",
-      "test project": "Projeto Teste",
+      "test project": "PUCsimual",
       "pucsimual": "PUCsimual",
-      "option": "opção",
+      "Preference System": "Sistema de Preferencia",
       "apply": "Aplicar",
       "save" : "Salvo",
-      "no sucess" : "Não Salvo"
+      "theme" : "Tema",
+      "Font" : "Fonte"
      }
 
 }
