@@ -5,9 +5,7 @@
 // You may need to build the project (run Qt uic code generator) to get "ui_info_window.h" resolved
 
 #include "ui/InfoWindow.h"
-
 #include <QLabel>
-
 #include "utils/GlobalAccess.h"
 #include "ui_InfoWindow.h"
 

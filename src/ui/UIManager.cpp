@@ -4,6 +4,8 @@
 
 #include "ui/UIManager.h"
 
+#include "GlobalAccess.h"
+
 void Style_Table::Style::table_result(QTableWidget *ui,int index,int ps) {
      if (ui != nullptr) {
          if (ps == 0) {
@@ -22,6 +24,7 @@ void Style_Table::Style::table_result(QTableWidget *ui,int index,int ps) {
              ui->item(index,7)->setBackground(QColor(Qt::red));
          }
      }
+
     return;
 }
 
@@ -32,13 +35,13 @@ void Style_Table::Style::clear_table(QTableWidget *ui,int h,int colune) {
 }
 
 
-void  _ui_::UI_init(Ui::_windows_ *ui) {
+void  ui_controller::UI_init(Ui::_windows_ *ui) {
     if (ui != nullptr) {
         this->ui = ui;
     }
 }
 
-void _ui_::_botao_() {
+void ui_controller::_botao_() {
     QFile filew{ui_styles_};
 
 

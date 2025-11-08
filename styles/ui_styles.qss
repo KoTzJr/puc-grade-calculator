@@ -25,7 +25,7 @@
 }
 
 #btn_remover {
-        background-image: url(:/img/img/btn_remover_normal.png);
+        background-image: url(:/img/img/btn_remove_normal.png);
         border: none;
         border-radius: 10px;
         width: 50px;
@@ -33,7 +33,7 @@
         icon: url(:/img/img/mais.png);
 }
 #btn_remover:hover {
-        background-image: url(:/img/img/btn_remover_hover.png);
+        background-image: url(:/img/img/btn_remove_hover.png);
         border: none;
         border-radius: 10px;
         width: 50px;

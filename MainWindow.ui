@@ -39,7 +39,7 @@
        <item>
         <widget class="QLabel" name="label_2">
          <property name="text">
-          <string>PUCSimual</string>
+          <string/>
          </property>
         </widget>
        </item>
@@ -243,7 +243,7 @@ background-color: rgb(44, 44, 44);
      <x>0</x>
      <y>0</y>
      <width>903</width>
-     <height>20</height>
+     <height>33</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuArquivos">

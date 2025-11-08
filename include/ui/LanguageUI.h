@@ -9,6 +9,7 @@
 #include <ui_MainWindow.h>
 #include <nlohmann/json.hpp>
 #include <ui_option.h>
+#include <nlohmann/json_fwd.hpp>
 
 
 enum TYPE_IDIOMA{
@@ -18,11 +19,12 @@ enum TYPE_IDIOMA{
 };
 
 
-class idioma_ui {
+class LanguageUI {
 public :
-    idioma_ui();
-    static void set_ui_idioma(nlohmann::json & get_json,Ui::_windows_ * ui,QString  & ui_language);
-    static void v_idioma(QString & ui_language);
+    LanguageUI();
+    static void initialize_language_ui(nlohmann::json & get_json,Ui::_windows_ * ui,QString  & ui_language);
+    static void updateLanguageUI(QString & language_key);
+    static nlohmann::json getLanguageJsonValue(QString language_keys,QString language_key);
 };
 
 

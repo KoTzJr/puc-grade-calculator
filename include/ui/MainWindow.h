@@ -13,6 +13,7 @@
 #include "io/FileManager.h"
 #include "utils/GlobalAccess.h"
 #include "ui/LanguageUI.h"
+#include <QDir>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class _windows_; }
@@ -40,22 +41,21 @@ private slots:
 
     void on_actionOpition_triggered();
 
-    void info_save(QString patch,int x);
+    void info_save(QString patch,TYPE_SAVE Value);
 private:
     Ui::_windows_ *ui;
     QTimer *timer;
-    system_nota *system_nota_;
-    _ui_ *is;
-    int i = 0;
+    GradeSystem *system_nota_;
+    ui_controller *is;
     FileManger file;
-    std::vector<Oitem>  sets;
+    std::vector<Oitem>  item_list_;
 
     QString patch_load;
     _FILE_ info_file;
-     option *op;
+    option *op;
     nlohmann::json system_json;
 
-    bool is_open;
+    bool is_file_open;
 
 };
 #endif //_WINDOWS__H
