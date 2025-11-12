@@ -52,12 +52,15 @@ void _windows_::Update() {
 _windows_::_windows_(QWidget *parent) : QMainWindow(parent), ui(new Ui::_windows_) {
     ui->setupUi(this);
     this->is = new ui_controller;
+    nlohmann::json json;
     FileManger::initialize_file_manager();
     GLOBAL::init_global(ui);
     is->UI_init(this->ui); // Inicializa a interface do usuário passando o ponteiro ui para a classe _ui_
     is->_botao_();
-    FileManger::Load(GLOBAL::PATCH_FILE::config,system_json);
-    LanguageUI::initialize_language_ui(system_json,this->ui,GLOBAL::idioma);
+    FileManger::Load(GLOBAL::PATCH_FILE::config,json);
+    if (json.empty() == false) {
+        LanguageUI::initialize_language_ui(json,this->ui,GLOBAL::idioma);
+    }
     system_nota_ = new GradeSystem(ui->tableWidget);
     this->timer = new QTimer(this);
     timer->setInterval(16);
@@ -120,7 +123,7 @@ void _windows_::info_save(QString path,TYPE_SAVE value) {
 }
 
 void _windows_::on_actionOpition_triggered() {
-    op = new option(this);
+     op = new option(this);
      op->show();
 }
 

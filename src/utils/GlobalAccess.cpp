@@ -15,7 +15,7 @@ namespace GLOBAL {
             UI = windows;
         }
     }
-    void init_global( Ui::option  * option) {
+    void init_global( Ui::option * option) {
         if (option != nullptr) {
             _ui_option = option;
         }

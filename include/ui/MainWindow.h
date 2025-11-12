@@ -52,8 +52,6 @@ private:
     QString patch_load;
     _FILE_ info_file;
     option *op;
-    nlohmann::json system_json;
-
     bool is_file_open;
 
 };

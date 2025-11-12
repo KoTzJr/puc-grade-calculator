@@ -11,17 +11,17 @@
 
 LanguageUI::LanguageUI() {}
 
-void LanguageUI::initialize_language_ui(Json & get_json ,Ui::_windows_ * ui,QString & ui_language ) {
+void LanguageUI::initialize_language_ui(Json & get_json ,Ui::_windows_ * ui_windows__,QString & ui_language ) {
     if (get_json.empty() == true) {
          return;
      }
-    if (ui != nullptr) {
-        QFile filew{GLOBAL::PATCH_FILE::language};
+    QFile filew{GLOBAL::PATCH_FILE::language};
+    if (filew.exists() == true) {
         filew.open(QFile::ReadOnly | QFile::Text);
-         nlohmann::json json = nlohmann::json::parse(filew.readAll().toStdString());
-         QString idioma = QString::fromStdString(get_json["idioma"]);
-         ui_language = idioma;
-         updateLanguageUI(idioma);
+        nlohmann::json json = nlohmann::json::parse(filew.readAll().toStdString());
+        QString idioma = QString::fromStdString(get_json["idioma"]);
+        ui_language = idioma;
+        updateLanguageUI(idioma);
     }
     return;
 }
@@ -45,13 +45,16 @@ nlohmann::json LanguageUI::getLanguageJsonValue(QString ui_language, QString lan
 void LanguageUI::updateLanguageUI(QString & language_key) {
     QFile filew{GLOBAL::PATCH_FILE::language};
     filew.open(QFile::ReadOnly | QFile::Text);
-    nlohmann::json json = nlohmann::json::parse(filew.readAll().toStdString());
-        std::array<QString,5> menu_arquivo = {"","","","",""};
-        std::array<QString,5> menu_ferramentas = {"","","","",""};
-        std::array<QString,10> menu_option;
-        std::array<QString,8> tabela_aluno = {"","","","","","","",""};
-
-
+    nlohmann::json json;
+    try {
+        json = nlohmann::json::parse(filew.readAll().toStdString());
+    }catch (nlohmann::json::exception & e) {
+          return;
+    }
+    std::array<QString,4>  menu_arquivo;
+    std::array<QString,5>  menu_ferramentas;
+    std::array<QString,10> menu_option;
+    std::array<QString,8>  tabela_aluno;
 
         if (language_key == "Ingles") {
 
