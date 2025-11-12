@@ -20,12 +20,13 @@ find_package(nlohmann_json CONFIG REQUIRED) ## JSON
 # Includes
 # -------------------------
 include_directories(
-    ${CMAKE_SOURCE_DIR}/include
-    ${CMAKE_SOURCE_DIR}/include/core
-    ${CMAKE_SOURCE_DIR}/include/data
-    ${CMAKE_SOURCE_DIR}/include/io
-    ${CMAKE_SOURCE_DIR}/include/ui
-    ${CMAKE_SOURCE_DIR}/include/utils
+        ${CMAKE_SOURCE_DIR}/include
+        ${CMAKE_SOURCE_DIR}/include/core
+        ${CMAKE_SOURCE_DIR}/include/data
+        ${CMAKE_SOURCE_DIR}/include/io
+        ${CMAKE_SOURCE_DIR}/include/ui
+        ${CMAKE_SOURCE_DIR}/include/utils
+        ${CMAKE_CURRENT_BINARY_DIR}  # <-- LINHA ADICIONADA PARA RESOLVER O PROBLEMA
 )
 
 # Caminho de UI
@@ -86,6 +87,7 @@ target_link_libraries(AvaliacaoDaPuc PRIVATE
         fmt::fmt
         nlohmann_json::nlohmann_json
 )
+
 # -------------------------
 # Pós-build (Qt)
 # -------------------------

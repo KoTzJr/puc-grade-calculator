@@ -9,7 +9,6 @@
 #include <string>
 #include <fmt/core.h>
 #include <QFileDialog>
-#include "ui_MainWindow.h"
 #include "io/FileManager.h"
 #include "utils/GlobalAccess.h"
 #include "ui/LanguageUI.h"
