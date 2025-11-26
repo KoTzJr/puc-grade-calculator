@@ -13,6 +13,8 @@
 struct Info_config {
     QString idioma;
     QString version;
+    QString fonte;
+    QString Theme;
 };
 
 

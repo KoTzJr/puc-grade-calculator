@@ -22,6 +22,7 @@ class option : public QMainWindow {
 private slots:
     void on_btn_aplicar_clicked();
     void on_btn_salvar_clicked();
+    void on_btn_search_paste_clicked();
 
 public:
     explicit option(QWidget *parent = nullptr);

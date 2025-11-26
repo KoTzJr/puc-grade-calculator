@@ -8,7 +8,7 @@ void GradeSystem::FormulaParaMedia(bool N1_menor, bool n2_menor, bool iguais,int
 
     double N1 = this->N1, N2 = this->N2,NF = this->nota_final;
     QString is = "";
-    auto items = this->item->item(row,8);
+    auto items = this->table_widget_->item(row,TYPE_GRADE::FALTA_MEDIA);
 
     if (N1_menor == true) {
          for (double i = 0; i <= 10; i+=00.1) {
@@ -70,8 +70,8 @@ void  GradeSystem::Quantidade_faltas(int index,QTableWidget *ui) {
     if (ui == nullptr) {
         return;
     }
-     if (ui->item(index, 2)->text().isEmpty() == true ||
-         ui->item(index, 3)->text().isEmpty() == true) {
+     if (ui->item(index, TYPE_GRADE::AULA_MINISTRADA)->text().isEmpty() == true ||
+         ui->item(index, TYPE_GRADE::NUMERO_PRESENCA)->text().isEmpty() == true) {
          return;
      }
      this->result_presenca = 0.0f;
@@ -84,10 +84,13 @@ void GradeSystem::FaltouMedia(double n1, double n2, double NFs, int row) {
     // Se a nota final for maior ou igual a 6, limpa o texto e retorna
 
     if (NFs >= 6.0  || NFs >= 6.00 || NFs>= 6.0-1e-9) {
-        item->item(row, 8)->setText("");  // limopar
+        table_widget_->item(row, TYPE_GRADE::FALTA_MEDIA)->setText("");  // limopar
         return;
     }
-    auto item = this->item->item(row, 8);
+    if (is_arrenado) {
+        return;
+    }
+    auto item = this->table_widget_->item(row, 8);
 
     // Se o item for nulo, retorna
     if (item == nullptr) {
@@ -171,6 +174,14 @@ void GradeSystem::clear_table_grade() {
     media = 0.0f;
     nota_final = 0.0f;
     IA = 0.0f;
+    is_arrenado = false;
+}
+QString GradeSystem::is_arredonar(double n) {
+    if (n >= 5.8 - 1e-9 && n <= 5.99 - 1e-9) {
+        is_arrenado = true;
+        return QString::fromStdString(fmt::format("{:.1f} -> {:.2f}",n,6.00));
+    }
+    return QString::fromStdString(fmt::format("{:.2f}",n));
 }
 
 /**
@@ -182,25 +193,32 @@ void GradeSystem::clear_table_grade() {
  * @param indexItem Índice da linha na tabela
  */
 void GradeSystem::processGradeResult(int indexItem) {
+    if (indexItem < 0) {
+        return;
+    }
     double NF = 0.0f;
     Formula_Avaliacao(this->N1, this->N2, NF, this->IA);
 
-    Style_Table::Style::clear_table(item, indexItem, 7);
-    this->item->item(indexItem, 6)->setText(QString::number(NF));
-    Quantidade_faltas(indexItem, this->item);
+    Style_Table::Style::clear_table(table_widget_, indexItem, TYPE_GRADE::Resultado);
+    this->table_widget_->item(indexItem, TYPE_GRADE::Media)->setText(is_arredonar(NF));
+    Quantidade_faltas(indexItem, this->table_widget_);
     FaltouMedia(this->N1, this->N2, NF, indexItem);
 
     if (NF == 0.0f ) {
+        Style_Table::Style::clear_table(table_widget_, indexItem, TYPE_GRADE::Resultado);
         return;
     }
-    if (NF >= 6.0 || NF >= 6 || NF >= 6.0 - 1e-9) {
-        Style_Table::Style::table_result(item, indexItem, 1);
+    if (is_arrenado == true) {
+        Style_Table::Style::table_result(table_widget_, indexItem, 1);
+    }
+    if (NF >= 6.0 || NF >= 6 || NF >= 6.0 - 1e-9 || is_arrenado == true) {
+        Style_Table::Style::table_result(table_widget_, indexItem, 1);
     }else if (NF < 6.0-1e-9 && NF > 0.0- 1e-9) {
-        Style_Table::Style::table_result(item, indexItem, 2);
+        Style_Table::Style::table_result(table_widget_, indexItem, 2);
     }
     if (result_presenca != 0.0 || result_presenca != 0.0f) {
         if (this->result_presenca <= 75.0 - 1e-9 && this->result_presenca >= 0.0- 1e-9) {
-            Style_Table::Style::table_result(item, indexItem, 0);
+            Style_Table::Style::table_result(table_widget_, indexItem, 0);
         }
     }
 }
@@ -211,12 +229,12 @@ void GradeSystem::processGradeResult(int indexItem) {
  * ou se ambas estiverem vazias
  * Retorna true se ambas contiverem números com ponto decimal
  */
-bool GradeSystem::is_verifiqueCacterece(int pos){
-    int asvezes_pontos_n1 =0,asvezez_pontos_n2 =0;
+bool GradeSystem::Is_verify_grade_format(int grade_values){
+    int decimalPointCountN1 =0,decimalPointCountN2 =0;
 
     bool isalpha_n1 = false, isalpha_n2 = false;
-    auto firstInput_n1 = this->item->item(pos, 4);
-    auto firstInput_n2 = this->item->item(pos, 5);
+    auto firstInput_n1 = this->table_widget_->item(grade_values, TYPE_GRADE::N1);
+    auto firstInput_n2 = this->table_widget_->item(grade_values, TYPE_GRADE::N2);
 
     for (auto &s: firstInput_n1->text().toStdString()) {
         if (isalpha(s)) {
@@ -246,7 +264,7 @@ bool GradeSystem::is_verifiqueCacterece(int pos){
                 return false;
             }
             if (i == ".") {
-                asvezes_pontos_n1++;
+                decimalPointCountN1++;
             }
         }
         for (auto &i: firstInput_n2->text()) {
@@ -254,13 +272,13 @@ bool GradeSystem::is_verifiqueCacterece(int pos){
                 return false;
             }
             if (i == ".") {
-                asvezez_pontos_n2++;
+                decimalPointCountN2++;
             }
         }
-        if (asvezes_pontos_n1 > 1 || asvezez_pontos_n2 > 1) {
+        if (decimalPointCountN1 > 1 || decimalPointCountN2 > 1) {
             return false;
         }
-        if (asvezes_pontos_n1 == 1 && asvezez_pontos_n2 == 1) {
+        if (decimalPointCountN1 == 1 && decimalPointCountN2 == 1) {
             nb1 = true;
             nbr = true;
         }
@@ -272,22 +290,24 @@ bool GradeSystem::is_verifiqueCacterece(int pos){
 
 GradeSystem::GradeSystem():
                  N1(0.0f),
-                 N2(0.0f),item(nullptr),
+                 N2(0.0f),table_widget_(nullptr),
                  media(0.0f),
                  nota_final(0.0f),
                  aula_ministradas(0),
                  aula_prevista(0),
-                 numero_presenca(0){}
+                 numero_presenca(0),is_arrenado(false) {
+
+}
 
 GradeSystem::GradeSystem(QTableWidget *obj):
                 N1(0.0f),N2(0.0f),
-                item(nullptr),
+                table_widget_(nullptr),
                 media(0.0f),
                 nota_final(0.0f),
                 aula_ministradas(0),
                 aula_prevista(0),
-                numero_presenca(0){
+                numero_presenca(0),is_arrenado(false){
      if (obj != nullptr) {
-        this->item = obj;
+        this->table_widget_ = obj;
      }
 }

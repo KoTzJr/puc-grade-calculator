@@ -14,7 +14,10 @@
 #include <QDir>
 #include <qurl.h>
 #include "data/ListDataItems.h"
+#include "GlobalAccess.h"
 
+typedef std::vector<Oitem> item_vector_array;
+typedef Info_config info_config_list;
 
 enum OPTION {
     SAVE_FILE_JSON_ALUNO = 0,
@@ -43,8 +46,9 @@ public :
     static bool is_null_fileJson(QString patch);
     static bool Load(QString path,Json & get_json);
     static bool Load(const QString path,nlohmann::json & get_json, bool & open);
-    static bool save(QString path,std::vector<Oitem> obj);
-    static bool save(QString path,Info_config info);
+    // static bool save(QString path,ErrorManager obj);
+    static bool save(QString path,item_vector_array obj);
+    static bool save(QString path,info_config_list info);
     FileManger();
 
 };

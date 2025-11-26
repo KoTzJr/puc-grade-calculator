@@ -13,6 +13,7 @@
 #include "utils/GlobalAccess.h"
 #include "ui/LanguageUI.h"
 #include <QDir>
+#include <QLocale>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class _windows_; }
@@ -40,6 +41,8 @@ private slots:
 
     void on_actionOpition_triggered();
 
+    void init ();
+
     void info_save(QString patch,TYPE_SAVE Value);
 private:
     Ui::_windows_ *ui;
@@ -52,7 +55,7 @@ private:
     QString patch_load;
     _FILE_ info_file;
     option *op;
-    bool is_file_open;
+    bool is_file_open = false;
 
 };
 #endif //_WINDOWS__H

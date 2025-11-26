@@ -16,6 +16,11 @@
     <verstretch>0</verstretch>
    </sizepolicy>
   </property>
+  <property name="font">
+   <font>
+    <family>Arial</family>
+   </font>
+  </property>
   <property name="windowTitle">
    <string>Projeto Teste</string>
   </property>
@@ -73,6 +78,11 @@
         <horstretch>0</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
+      </property>
+      <property name="font">
+       <font>
+        <family>Arial</family>
+       </font>
       </property>
       <property name="styleSheet">
        <string notr="true">QTableWidget {
@@ -171,6 +181,11 @@ background-color: rgb(44, 44, 44);
       <layout class="QHBoxLayout" name="horizontalLayout_2">
        <item>
         <widget class="QLabel" name="label">
+         <property name="font">
+          <font>
+           <family>Arial</family>
+          </font>
+         </property>
          <property name="text">
           <string>AI</string>
          </property>
@@ -206,6 +221,11 @@ background-color: rgb(44, 44, 44);
            <width>50</width>
            <height>60</height>
           </size>
+         </property>
+         <property name="font">
+          <font>
+           <family>Arial</family>
+          </font>
          </property>
          <property name="text">
           <string>info</string>
@@ -245,6 +265,11 @@ background-color: rgb(44, 44, 44);
      <width>903</width>
      <height>33</height>
     </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Arial</family>
+    </font>
    </property>
    <widget class="QMenu" name="menuArquivos">
     <property name="title">

@@ -21,6 +21,6 @@ namespace GLOBAL {
         }
     }
     namespace ARRAY {
-        std::vector<InfoSystemDebug> info_debugs;
+        std::vector<info_log> log_array;
     }
 }

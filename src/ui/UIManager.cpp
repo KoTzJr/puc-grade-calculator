@@ -31,7 +31,7 @@ void Style_Table::Style::table_result(QTableWidget *ui,int index,int ps) {
 
 void Style_Table::Style::clear_table(QTableWidget *ui,int h,int colune) {
     ui->item(h,colune)->setText("");
-    ui->item(h, colune)->setBackground(QColor(""));
+    ui->item(h, colune)->setBackground(QColor::fromRgb(44,44,44,44));
 }
 
 

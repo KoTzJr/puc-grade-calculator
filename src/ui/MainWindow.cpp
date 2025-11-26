@@ -7,6 +7,8 @@
 
 #include "ui/MainWindow.h"
 #include "ui/InfoWindow.h"
+#include <io/json_parser.h>
+#include <QLocale>
 
 void _windows_::on_btn_infoSystem_clicked() {
      info_window *info = new info_window(this);
@@ -22,11 +24,11 @@ void _windows_::Update_table_data() {
             auto N1 = ui->tableWidget->item(index_item, 4)->text().toDouble();
             auto N2 = ui->tableWidget->item(index_item, 5)->text().toDouble();;
             auto IA = ui->lineEdit->text().toFloat();
-            auto aula_ministrava = ui->tableWidget->item(index_item, 2)->text().toInt();
-            auto aula_presenca = ui->tableWidget->item(index_item, 3)->text().toInt();
-            this->system_nota_->sets_todas_atividades(0,aula_ministrava,aula_presenca,N1,N2,IA);
+            auto Taught_Classes = ui->tableWidget->item(index_item, 2)->text().toInt();
+            auto Attendance_Count = ui->tableWidget->item(index_item, 3)->text().toInt();
+            this->system_nota_->sets_todas_atividades(0,Taught_Classes,Attendance_Count,N1,N2,IA);
 
-            if (system_nota_->is_verifiqueCacterece(index_item))
+            if (system_nota_->Is_verify_grade_format(index_item))
             {
                 this->system_nota_->processGradeResult(index_item);
             }
@@ -34,13 +36,36 @@ void _windows_::Update_table_data() {
         }
     }
 }
-
+/**
+ * Inicializa os componentes principais da janela
+ * 
+ * Esta função realiza as seguintes inicializações:
+ * - Cria e configura o controlador da interface gráfica
+ * - Inicializa os elementos visuais da UI
+ * - Configura os botões da interface
+ * - Inicializa o gerenciador de arquivos
+ * - Inicializa as variáveis globais
+ */
+void _windows_::init() {
+    std::unique_ptr<ui_controller> controller_ui = std::make_unique<ui_controller>();
+    controller_ui->UI_init(this->ui);
+    controller_ui->_botao_();
+    FileManger::initialize_file_manager();
+    GLOBAL::init_global(ui);
+}
+void SortTable() {
+     if (GLOBAL::UI->tableWidget != nullptr) {
+         // GLOBAL::UI->tableWidget->sortByColumn(4,Qt::DescendingOrder);
+         // GLOBAL::UI->tableWidget->sortByColumn(5,Qt::DescendingOrder);
+     }
+}
 /**
 * Função que atualiza as notas na tabela
 * Chamada periodicamente pelo timer para manter 
 * a interface atualizada
 */
 void _windows_::Update() {
+    SortTable();
     Update_table_data();
 }
 /**
@@ -51,13 +76,9 @@ void _windows_::Update() {
  */
 _windows_::_windows_(QWidget *parent) : QMainWindow(parent), ui(new Ui::_windows_) {
     ui->setupUi(this);
-    this->is = new ui_controller;
     nlohmann::json json;
-    FileManger::initialize_file_manager();
-    GLOBAL::init_global(ui);
-    is->UI_init(this->ui); // Inicializa a interface do usuário passando o ponteiro ui para a classe _ui_
-    is->_botao_();
-    FileManger::Load(GLOBAL::PATCH_FILE::config,json);
+    init();
+    FileManger::Load(GLOBAL::PATCH_FILE::CONFIG,json);
     if (json.empty() == false) {
         LanguageUI::initialize_language_ui(json,this->ui,GLOBAL::idioma);
     }
@@ -111,10 +132,13 @@ void _windows_::info_save(QString path,TYPE_SAVE value) {
         is_file_save = FileManger::save(path,item_list_);
    }
     if (value == TYPE_SAVE::SAVE_LOCAL_FILE) {
-        is_file_save = FileManger::save(GLOBAL::PATCH_FILE::Data,item_list_) ;
+        is_file_save = FileManger::save(GLOBAL::PATCH_FILE::DATA,item_list_) ;
     }
     if (is_file_save) {
         ui->label_3->setText("Salvo !");
+        info_log objeto;
+        objeto.DataErroJson(DATA{"Sistema de Salvamento","Nenhum","Salvamento com Sucesso",});
+        GLOBAL::ARRAY::log_array.push_back(objeto);
     }
     else {
         ui->label_3->setText("Falha de salvamento");
@@ -140,7 +164,6 @@ void _windows_::on_actionSalvar_como_triggered() {
     }
     if (selectedFile!= nullptr && filePath.find(".json") != std::string::npos) {
          info_save(selectedFile,SAVE_AS);
-
     }else {
         ui->label_3->setText("Falha de salvamento necessario Json ");
     }
@@ -189,9 +212,9 @@ void _windows_::on_actionAbrir_triggered() {
      if (isLoadSuccessful == false) {
         return;
      }
-        for (int a = 0; a < get_json.size();a++){
+          for (int a = 0; a < get_json.size();a++){
             ui->tableWidget->insertRow(0);
-        }
+          }
 
     for (int b = 0; b < ui->tableWidget->rowCount();b++) {
         for (int a = 0; a < ui->tableWidget->columnCount();a++) {
@@ -230,13 +253,12 @@ void _windows_::on_actionAbrir_triggered() {
     }catch (std::exception &e) {
         qDebug() << e.what();
     }
-    if (is_file_aluno == true) {
-         QString info = "Arquivo aberto: "+ openFileUrl.fileName();
-         GLOBAL::ARRAY::info_debugs.push_back(InfoSystemDebug{info,""});
-         ui->info_arquivo->setText("Arquivo aberto: "+ openFileUrl.fileName());
-         info_file.fileName = openFileUrl.toLocalFile();
-         info_file.isFileOpen = is_file_open;
-    }
+                if (is_file_aluno == true) {
+                     QString info = "Arquivo aberto: "+ openFileUrl.fileName();
+                     ui->info_arquivo->setText("Arquivo aberto: "+ openFileUrl.fileName());
+                     info_file.fileName = openFileUrl.toLocalFile();
+                     info_file.isFileOpen = is_file_open;
+                }
 }
 /**
  * Função chamada quando a opção "Novo" é acionada
@@ -251,6 +273,7 @@ void _windows_::on_actionNovo_triggered() {
  * Libera a memória alocada para o objeto ui
  */
 _windows_::~_windows_() {
+    //delete is;
     delete ui;
 }
 
@@ -270,10 +293,10 @@ void _windows_::on_btn_add_clicked() {
         for (int a = 0; a < ui->tableWidget->columnCount();a++) {
              if (ui->tableWidget->item(b,a) == nullptr) {
                  ui->tableWidget->setItem(b,a,new QTableWidgetItem);
+
                  QStringList labels;
                  labels << "";
                  ui->tableWidget->setVerticalHeaderLabels(labels);
-
              }
         }
     }
@@ -286,19 +309,32 @@ void _windows_::on_btn_add_clicked() {
  * Função chamada quando o botão "Remover" é clicado
  * Remove a última linha da tabela
  */
-void _windows_::on_btn_remover_clicked() {
-   bool is_Selected = false;
-   auto itemList =  ui->tableWidget->selectedItems();
-    if (itemList.isEmpty() == false) {
-        if (itemList.at(1)->tableWidget() == nullptr) {
-            return;
-        }
-        auto index =  itemList.at(1)->row();
-        ui->tableWidget->removeRow(index);
-        is_Selected = true;
-    }
-    if (is_Selected == false) {
-        ui->tableWidget->removeRow(ui->tableWidget->rowCount() - 1);
-    }
 
+class TS {
+public :
+    int row;
+};
+void _windows_::on_btn_remover_clicked()
+{
+   bool is_Selected = false;
+    int value = 0;
+    for (int a = 0; a < ui->tableWidget->rowCount();a++) {
+        for (int b = 0; b < ui->tableWidget->columnCount();b++) {
+           qDebug () << a << ": " << b <<  ui->tableWidget->item(a,b)->isSelected();
+           // ui->tableWidget->removeRow(a);
+        }
+    }
+    if (is_Selected == true) {
+        // auto itemList =  ui->tableWidget->selectedItems();
+        // if (itemList.isEmpty() == false) {
+        //     if (itemList.at(0)->tableWidget() == nullptr) {
+        //         return;
+        //     }
+        //     auto index =  itemList.at(1)->row();
+        //     ui->tableWidget->removeRow(index);
+        // }
+        // // if (is_Selected == false) {
+        // //     ui->tableWidget->removeRow(ui->tableWidget->rowCount() - 1);
+        // // }
+    }
 }

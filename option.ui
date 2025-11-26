@@ -162,7 +162,33 @@
            </widget>
           </item>
           <item>
-           <widget class="QComboBox" name="comboBox_intervalo_time"/>
+           <widget class="QComboBox" name="comboBox_intervalo_time">
+            <item>
+             <property name="text">
+              <string>5 min</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>10 min</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>30 min</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>1 hora</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>5 hora</string>
+             </property>
+            </item>
+           </widget>
           </item>
          </layout>
         </item>
@@ -211,6 +237,19 @@
          <widget class="QFontComboBox" name="fontComboBox"/>
         </item>
        </layout>
+      </widget>
+      <widget class="QPushButton" name="btn_search_paste">
+       <property name="geometry">
+        <rect>
+         <x>300</x>
+         <y>10</y>
+         <width>71</width>
+         <height>24</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Procurar</string>
+       </property>
       </widget>
      </widget>
     </item>

@@ -15,13 +15,13 @@ info_window::info_window(QWidget *parent) : QMainWindow(parent), ui(new Ui::info
     QWidget *widget = new QWidget(this);
     QVBoxLayout *layout = new QVBoxLayout(widget);
     QLabel *label = new QLabel(widget);
-    //QFrame *frame = new QFrame(widget);
 
-    for (auto & info : GLOBAL::ARRAY::info_debugs) {
-        label->setText(info.GetALL());
+    for (auto & info : GLOBAL::ARRAY::log_array) {
+        label->setText(info.GetMensagemErro());
         layout->addWidget(label);
     }
     ui->scrollArea->setWidget(widget);
+    GLOBAL::ARRAY::log_array.clear();
 }
 
 info_window::~info_window() {

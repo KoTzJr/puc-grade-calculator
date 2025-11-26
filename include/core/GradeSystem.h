@@ -10,6 +10,19 @@
 #include "ui/UIManager.h"
 #include "data/ListDataItems.h"
 
+
+enum TYPE_GRADE {
+    NAME = 0,
+    AULA_PREVISTA = 1,
+    AULA_MINISTRADA = 2,
+    NUMERO_PRESENCA = 3,
+    N1 = 4,
+    N2 = 5,
+    Media = 6,
+    Resultado = 7,
+    FALTA_MEDIA = 8
+};
+
 class GradeSystem {
 private :
     QString Nome;
@@ -18,20 +31,20 @@ private :
     int aula_prevista;
     int aula_ministradas;
     int numero_presenca;
-    double result_presenca;
+    double result_presenca{};
     double media;
     double nota_final;
 
-    double IA;
-
-QTableWidget *item;
+    double IA{};
+    bool is_arrenado;
+QTableWidget *table_widget_;
 public :
       void processGradeResult(int indexItem);
-      bool is_verifiqueCacterece(int pos);
+      bool Is_verify_grade_format(int grade_values);
       void Formula_Avaliacao(double n1, double  n2, double  &NF,double  AI);
       void Formula_Avaliacao(double n1, double  n2, double  &NF);
       void FaltouMedia(double  n1,double  n2,double  NF,int row);
-
+      QString is_arredonar(double n);
       void Quantidade_faltas(int index,QTableWidget *ui);
 
       void FormulaParaMedia(bool N1_Menor,bool N2_Menor, bool iguais,int row);

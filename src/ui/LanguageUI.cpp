@@ -5,7 +5,6 @@
 #include "ui/LanguageUI.h"
 #include <ui_option.h>
 #include <fmt/base.h>
-
 #include "io/FileManager.h"
 #include "utils/GlobalAccess.h"
 
@@ -15,7 +14,7 @@ void LanguageUI::initialize_language_ui(Json & get_json ,Ui::_windows_ * ui_wind
     if (get_json.empty() == true) {
          return;
      }
-    QFile filew{GLOBAL::PATCH_FILE::language};
+    QFile filew{GLOBAL::PATCH_FILE::LANGUAGE};
     if (filew.exists() == true) {
         filew.open(QFile::ReadOnly | QFile::Text);
         nlohmann::json json = nlohmann::json::parse(filew.readAll().toStdString());
@@ -33,17 +32,18 @@ nlohmann::json LanguageUI::getLanguageJsonValue(QString ui_language, QString lan
     if (ui_language == "Ingles") {
         ui_language = "en";
     }
-    QFile filew{GLOBAL::PATCH_FILE::language};
+    QFile filew{GLOBAL::PATCH_FILE::LANGUAGE};
     filew.open(QFile::ReadOnly | QFile::Text);
     try {
        json = nlohmann::json::parse(filew.readAll().toStdString());
     }catch (nlohmann::json::exception & e) {
+        return nlohmann::json {};
     }
     return json[ui_language.toStdString()][language_key.toStdString()];
 }
 
 void LanguageUI::updateLanguageUI(QString & language_key) {
-    QFile filew{GLOBAL::PATCH_FILE::language};
+    QFile filew{GLOBAL::PATCH_FILE::LANGUAGE};
     filew.open(QFile::ReadOnly | QFile::Text);
     nlohmann::json json;
     try {
@@ -51,12 +51,12 @@ void LanguageUI::updateLanguageUI(QString & language_key) {
     }catch (nlohmann::json::exception & e) {
           return;
     }
-    std::array<QString,4>  menu_arquivo;
-    std::array<QString,5>  menu_ferramentas;
+    std::vector<QString>   menu_arquivo(GLOBAL::UI->menuArquivos->actions().size()+1);
+    std::vector<QString>   menu_ferramentas(GLOBAL::UI->menuFerramentas->actions().size()+1);
     std::array<QString,10> menu_option;
-    std::array<QString,8>  tabela_aluno;
+    std::vector<QString>   tabela_aluno(GLOBAL::UI->tableWidget->columnCount());
 
-        if (language_key == "Ingles") {
+        if (language_key == "Ingles" || language_key == "en" || language_key == "en-us") {
 
             menu_arquivo[0] = QString::fromStdString(json["en"]["arquivo"]).remove('"');
             menu_arquivo[1] = QString::fromStdString(json["en"]["novo"]).remove('"');
@@ -82,7 +82,7 @@ void LanguageUI::updateLanguageUI(QString & language_key) {
             menu_option[4] =  QString::fromStdString(json["en"]["Fonte"]).remove('"');
 
         }
-        if (language_key == "Português") {
+        if (language_key == "Português"|| language_key == "pt" || language_key == "pt-br") {
 
             menu_arquivo[0] = QString::fromStdString(json["Português"]["file"]).remove('"');
             menu_arquivo[1] = QString::fromStdString(json["Português"]["new"]).remove('"');
@@ -100,7 +100,7 @@ void LanguageUI::updateLanguageUI(QString & language_key) {
 
 
             menu_ferramentas[0]   =  QString::fromStdString(json["Português"]["tools"]).remove('"');
-            menu_ferramentas[1]   =  QString::fromStdString(json["Português"]["PreferenceSystem"]).remove('"');
+            menu_ferramentas[1]   =  QString::fromStdString(json["Português"]["Preference System"]).remove('"');
 
 
             menu_option[0] =  QString::fromStdString(json["Português"]["language"]).remove('"');
