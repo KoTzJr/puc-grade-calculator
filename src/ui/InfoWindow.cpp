@@ -10,20 +10,21 @@
 #include "ui_InfoWindow.h"
 
 
-info_window::info_window(QWidget *parent) : QMainWindow(parent), ui(new Ui::info_window) {
+UI_LogWindow::UI_LogWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::info_window) {
     ui->setupUi(this);
     QWidget *widget = new QWidget(this);
     QVBoxLayout *layout = new QVBoxLayout(widget);
     QLabel *label = new QLabel(widget);
+    layout->setSpacing(1);
 
-    for (auto & info : GLOBAL::ARRAY::log_array) {
+    for (auto & info : GLOBAL::ARRAY::LOG::log_array) {
         label->setText(info.GetMensagemErro());
         layout->addWidget(label);
     }
     ui->scrollArea->setWidget(widget);
-    GLOBAL::ARRAY::log_array.clear();
+    GLOBAL::ARRAY::LOG::log_array.clear();
 }
 
-info_window::~info_window() {
+UI_LogWindow::~UI_LogWindow() {
     delete ui;
 }

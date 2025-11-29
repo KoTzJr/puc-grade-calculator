@@ -13,10 +13,12 @@
 #include "io/FileManager.h"
 #include "utils/GlobalAccess.h"
 #include "qwidget.h"
+#include "UIManager.h"
 
 option::option(QWidget *parent) : QMainWindow(parent), ui_option_(new Ui::option) {
     ui_option_->setupUi(this);
     GLOBAL::init_global(ui_option_);
+    UI_FONT::text(GLOBAL::json,ui_option_);
     ui_option_->lineEdit->setEnabled(false);
    if (json_parser::GetFileJson(GLOBAL::PATCH_FILE::CONFIG,"config").is_null() == false) {
        auto get= QString::fromStdString(json_parser::GetFileJson(GLOBAL::PATCH_FILE::CONFIG,"config")).remove("'");
@@ -37,7 +39,6 @@ option::option(QWidget *parent) : QMainWindow(parent), ui_option_(new Ui::option
     }
 }
 
-
 void option::on_btn_search_paste_clicked() {
     QFileDialog fileDialog(this);
     fileDialog.setFileMode(QFileDialog::ExistingFile);
@@ -49,13 +50,13 @@ void option::on_btn_search_paste_clicked() {
     GLOBAL::PATCH_FILE::CONFIG = fileName;
 }
 
-
 void option::on_btn_aplicar_clicked() {
 
     Json json;
     auto idioma = ui_option_->comboBox->currentText();
     QString idi;
     QString Palavra_chave = "";
+    UI_FONT::get(ui_option_->fontComboBox->currentText());
     if (idioma == "Ingles") {
         Palavra_chave = "Sistema de Preferencia";
         idi = "en";
@@ -74,7 +75,7 @@ void option::on_btn_salvar_clicked() {
     config.idioma = ui_option_->comboBox->currentText();
     config.fonte  = ui_option_->fontComboBox->currentText();
     config.Theme  = ui_option_->Combox_tema->currentText();
-   auto file_save = FileManger::save(GLOBAL::PATCH_FILE::CONFIG,config);
+    auto file_save = FileManger::save(GLOBAL::PATCH_FILE::CONFIG,config);
     if (file_save) {
         qDebug () << "Salvo com sucesso";
     }else {

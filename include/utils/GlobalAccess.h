@@ -11,13 +11,14 @@
 
 #include <QDir>
 
-#include "info_log.h"
+#include "DataInfoLog.h"
 
 namespace GLOBAL {
      extern   QString idioma;
      extern   bool is_aplica;
      extern   Ui::_windows_ * UI;
      extern   Ui::option   *_ui_option;
+     extern   nlohmann::json json;
      namespace PATCH_FILE {
           const    QString DATA = QDir::homePath() + "/Documents/PUCSimulador/data.json";
           const    QString LANGUAGE = "C:\\Users\\KoTz\\Documents\\GitHub\\puc-grade-calculator\\idioma.json";
@@ -27,7 +28,10 @@ namespace GLOBAL {
      extern   void init_global(Ui::_windows_ * windows);
      extern   void init_global(Ui::option  * option);
      namespace ARRAY {
-         extern std::vector<info_log> log_array;
+         namespace LOG {
+              extern std::vector<DataInfoLog> log_array;
+
+         }
      }
 }
 

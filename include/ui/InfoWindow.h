@@ -16,13 +16,13 @@ namespace Ui {
 
 QT_END_NAMESPACE
 
-class info_window : public QMainWindow {
+class UI_LogWindow : public QMainWindow {
     Q_OBJECT
 
 public:
-    explicit info_window(QWidget *parent = nullptr);
+    explicit UI_LogWindow(QWidget *parent = nullptr);
 
-    ~info_window() override;
+    ~UI_LogWindow() override;
 
 private:
     Ui::info_window *ui;

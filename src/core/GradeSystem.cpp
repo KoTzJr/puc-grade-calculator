@@ -6,9 +6,11 @@
 
 void GradeSystem::FormulaParaMedia(bool N1_menor, bool n2_menor, bool iguais,int row) {
 
-    double N1 = this->N1, N2 = this->N2,NF = this->nota_final;
+    auto  N1 = this->N1;
+    auto  N2 = this->N2;
+    auto  NF = this->nota_final;
     QString is = "";
-    auto items = this->table_widget_->item(row,TYPE_GRADE::FALTA_MEDIA);
+    const auto items = this->table_widget_->item(row,TYPE_GRADE::FALTA_MEDIA);
 
     if (N1_menor == true) {
          for (double i = 0; i <= 10; i+=00.1) {
@@ -91,7 +93,6 @@ void GradeSystem::FaltouMedia(double n1, double n2, double NFs, int row) {
         return;
     }
     auto item = this->table_widget_->item(row, 8);
-
     // Se o item for nulo, retorna
     if (item == nullptr) {
         return;
@@ -100,7 +101,6 @@ void GradeSystem::FaltouMedia(double n1, double n2, double NFs, int row) {
     if (n1 == 0.0f && n2 == 0.0f) {
         return;
     }
-
     // Verifica qual nota é menor
     if (n1 > n2) {
         n2_menor = true;
@@ -123,7 +123,6 @@ void GradeSystem::Formula_Avaliacao(double n1, double n2 , double  &NF, double  
     if (n1 > 10.0 || n2 > 10.0) {
         return;
     }
-
     if (AI != 0.0f) {
         n2 = n2 + AI;
     }
@@ -135,7 +134,11 @@ void GradeSystem::Formula_Avaliacao(double n1, double n2 , double  &NF, double  
 }
 
 Oitem GradeSystem::Get_All() const {
-     return Oitem(this->Nome,this->aula_prevista,this->aula_ministradas,this->numero_presenca,this->N1,this->N2);
+     return Oitem(this->Nome,
+         this->aula_prevista,
+         this->aula_ministradas,
+         this->numero_presenca,
+         this->N1,this->N2);
 }
 /**
  * Sobrecarga do método Formula_Avaliacao sem o parâmetro AI
@@ -222,91 +225,66 @@ void GradeSystem::processGradeResult(int indexItem) {
         }
     }
 }
-
-/**
- * Verifica se os caracteres nas células n1 e n2 são válidos
- * Retorna false se encontrar letras em alguma das células
- * ou se ambas estiverem vazias
- * Retorna true se ambas contiverem números com ponto decimal
- */
 bool GradeSystem::Is_verify_grade_format(int grade_values){
-    int decimalPointCountN1 =0,decimalPointCountN2 =0;
 
-    bool isalpha_n1 = false, isalpha_n2 = false;
-    auto firstInput_n1 = this->table_widget_->item(grade_values, TYPE_GRADE::N1);
-    auto firstInput_n2 = this->table_widget_->item(grade_values, TYPE_GRADE::N2);
+    const std::vector<QString> invalidCharacters =
+       {"-","[","]","!","@","#",
+       "$","%","^","&",
+        "*","(",")","+","=",
+        "{","}","|","\\",
+        ";",":","'",",",
+        "<",">","?","/","~"};
 
-    for (auto &s: firstInput_n1->text().toStdString()) {
-        if (isalpha(s)) {
-            isalpha_n1 = true;
-        }
-    }
+        auto firstInput_n1 = this->table_widget_->item(grade_values, TYPE_GRADE::N1);
+        auto firstInput_n2 = this->table_widget_->item(grade_values, TYPE_GRADE::N2);
 
-    for (auto &w: firstInput_n2->text().toStdString()) {
-        if (isalpha(w)) {
-            isalpha_n2 = true;
-        }
-    }
-
-    if (isalpha_n1 == true && isalpha_n2 == true ||
-        isalpha_n1 == true && isalpha_n2 == false
-        || isalpha_n1 == false && isalpha_n2 == true) {
-        return false;
-    }
-
-    bool nbr = false, nb1 = false;
-    if (firstInput_n1 != nullptr && firstInput_n2 != nullptr) {
-        if (firstInput_n1->text().isEmpty() && firstInput_n2->text().isEmpty()) {
+        if (firstInput_n1 == nullptr || firstInput_n2 == nullptr) {
             return false;
         }
-        for (auto &i: firstInput_n1->text()) {
-            if (i == "-") {
-                return false;
-            }
-            if (i == ".") {
-                decimalPointCountN1++;
-            }
-        }
-        for (auto &i: firstInput_n2->text()) {
-            if (i == "-") {
-                return false;
-            }
-            if (i == ".") {
-                decimalPointCountN2++;
-            }
-        }
-        if (decimalPointCountN1 > 1 || decimalPointCountN2 > 1) {
+        if (firstInput_n1->text().isEmpty() || firstInput_n2->text().isEmpty()) {
             return false;
         }
-        if (decimalPointCountN1 == 1 && decimalPointCountN2 == 1) {
-            nb1 = true;
-            nbr = true;
+        if (firstInput_n1->text().size() > 4 || firstInput_n2->text().size() > 4) {
+            return false;
         }
-
-        return nbr && nb1;
-    }
-    return false;
+        /// Verificar se algo letra
+        for (auto &s: firstInput_n1->text().toStdString()) {
+            if (isalpha(s)) {
+                return false;
+            }
+        }
+        for (auto &w: firstInput_n2->text().toStdString()) {
+            if (isalpha(w)) {
+                return false;
+            }
+        }
+        std::string input_n1 = firstInput_n1->text().toStdString();
+        std::string input_n2 = firstInput_n2->text().toStdString();
+        for (auto & text : invalidCharacters) {
+            if (input_n1.find(text.toStdString().c_str()) != std::string::npos ||
+                input_n2.find(text.toStdString().c_str()) != std::string::npos) {
+                 return false;
+            }
+        }
+    return true;
 }
-
 GradeSystem::GradeSystem():
                  N1(0.0f),
-                 N2(0.0f),table_widget_(nullptr),
+                 N2(0.0f),aula_prevista(0),
+                 aula_ministradas(0),
+                 numero_presenca(0),
                  media(0.0f),
                  nota_final(0.0f),
-                 aula_ministradas(0),
-                 aula_prevista(0),
-                 numero_presenca(0),is_arrenado(false) {
-
-}
+                 is_arrenado(false),table_widget_(nullptr) {}
 
 GradeSystem::GradeSystem(QTableWidget *obj):
                 N1(0.0f),N2(0.0f),
-                table_widget_(nullptr),
+                aula_prevista(0),
+                aula_ministradas(0),
+                numero_presenca(0),
                 media(0.0f),
                 nota_final(0.0f),
-                aula_ministradas(0),
-                aula_prevista(0),
-                numero_presenca(0),is_arrenado(false){
+                is_arrenado(false),table_widget_(nullptr){
      if (obj != nullptr) {
         this->table_widget_ = obj;
      }

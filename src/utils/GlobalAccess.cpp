@@ -10,6 +10,7 @@ namespace GLOBAL {
     bool is_aplica;
     Ui::_windows_ * UI;
     Ui::option    *_ui_option;
+    nlohmann::json json;
     void init_global(Ui::_windows_ * windows) {
         if (windows != nullptr) {
             UI = windows;
@@ -21,6 +22,8 @@ namespace GLOBAL {
         }
     }
     namespace ARRAY {
-        std::vector<info_log> log_array;
+        namespace LOG {
+            std::vector<DataInfoLog> log_array;
+        }
     }
 }

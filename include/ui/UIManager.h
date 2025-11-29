@@ -3,9 +3,14 @@
 
 #include <ui_MainWindow.h>
 #include <QDir>
+#include <nlohmann/adl_serializer.hpp>
+
+#include "PreferenceSystem.h"
+#include "ui_option.h"
 
 const QString ui_styles_ = QDir::homePath() + "/Documents/GitHub/puc-grade-calculator/styles/ui_styles.qss";
 const QString ui_styles__ =  "/home/kotz/Documentos/GitHub/puc-grade-calculator/styles/ui_styles.qss";
+const QString ui_styles_tabel_widget = "C:\\Users\\KoTz\\Documents\\GitHub\\puc-grade-calculator\\styles\\styles_tabel_widget.qss";
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class _windows_; class Style;}
@@ -19,14 +24,22 @@ namespace Style_Table {
     };
 
 }
-
+enum TYPE {
+    MAIN_WINDOW = 0,
+    PREFERENCE_SYSTEM = 1
+};
 class ui_controller {
-private:
-    Ui::_windows_ *ui;
 public:
-    void UI_init(Ui::_windows_ *ui);
-    void _botao_();
+    static void TableWidget(Ui__windows_ * ui);
+    static void Button(TYPE,Ui__windows_ * ui);
+};
+struct UI_FONT {
+    static void get(QString fonte);
+    static void text(nlohmann::json json,Ui__windows_ * ui);
+    static void text(QString fonte,nlohmann::json json, Ui::option * ui);
+    static void text(nlohmann::json json, Ui::option * ui);
 
 };
+
 
 #endif //_UI__H

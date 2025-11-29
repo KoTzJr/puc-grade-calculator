@@ -121,23 +121,6 @@ bool FileManger::save(QString path,info_config_list info) {
 
     return  false;
 }
-// bool FileManger::save(QString path,  obj) {
-//     if (path.isEmpty() == true) {
-//         return false;
-//     }
-//     QFile filew(path);
-//     if (filew.exists() == true) {
-//         filew.remove();
-//     }
-//     std::fstream file(path.toStdString(),std::ios::app);
-//
-//        nlohmann::json json = {
-//            {}
-//        };
-//        file << json.dump(2);
-// }
-
-
 bool FileManger::save(QString path,std::vector<Oitem> obj) {
 
     if (path.isEmpty() == true || obj.empty() == true) {

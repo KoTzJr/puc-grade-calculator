@@ -11,8 +11,14 @@
 #include <QLocale>
 
 void _windows_::on_btn_infoSystem_clicked() {
-     info_window *info = new info_window(this);
+     UI_LogWindow *info = new UI_LogWindow(this);
      info->show();
+}
+static bool max_ilimite_value(double n1,double n2) {
+    if (n1 > 10.0 || n2 > 10.0) {
+        return true;
+    }
+    return false;
 }
 void _windows_::Update_table_data() {
     if (ui->tableWidget->rowCount() == 0 && ui->tableWidget->columnCount() == 0) {
@@ -30,7 +36,14 @@ void _windows_::Update_table_data() {
 
             if (system_nota_->Is_verify_grade_format(index_item))
             {
+                if (max_ilimite_value(N1,N2)) {
+                    return;
+                }
                 this->system_nota_->processGradeResult(index_item);
+            }else {
+                Style_Table::Style::clear_table(ui->tableWidget,index_item,TYPE_GRADE::Resultado);
+                Style_Table::Style::clear_table(ui->tableWidget,index_item,TYPE_GRADE::Media);
+                Style_Table::Style::clear_table(ui->tableWidget,index_item,TYPE_GRADE::FALTA_MEDIA);
             }
             this->system_nota_->clear_table_grade();
         }
@@ -48,8 +61,9 @@ void _windows_::Update_table_data() {
  */
 void _windows_::init() {
     std::unique_ptr<ui_controller> controller_ui = std::make_unique<ui_controller>();
-    controller_ui->UI_init(this->ui);
-    controller_ui->_botao_();
+    //controller_ui->UI_init(this->ui);
+    ui_controller::Button(TYPE::MAIN_WINDOW,ui);
+    ui_controller::TableWidget(ui);
     FileManger::initialize_file_manager();
     GLOBAL::init_global(ui);
 }
@@ -76,11 +90,11 @@ void _windows_::Update() {
  */
 _windows_::_windows_(QWidget *parent) : QMainWindow(parent), ui(new Ui::_windows_) {
     ui->setupUi(this);
-    nlohmann::json json;
     init();
-    FileManger::Load(GLOBAL::PATCH_FILE::CONFIG,json);
-    if (json.empty() == false) {
-        LanguageUI::initialize_language_ui(json,this->ui,GLOBAL::idioma);
+    FileManger::Load(GLOBAL::PATCH_FILE::CONFIG,GLOBAL::json);
+    if (GLOBAL::json.empty() == false) {
+        LanguageUI::initialize_language_ui(GLOBAL::json,this->ui,GLOBAL::idioma);
+        UI_FONT::text(GLOBAL::json,ui);
     }
     system_nota_ = new GradeSystem(ui->tableWidget);
     this->timer = new QTimer(this);
@@ -136,9 +150,12 @@ void _windows_::info_save(QString path,TYPE_SAVE value) {
     }
     if (is_file_save) {
         ui->label_3->setText("Salvo !");
-        info_log objeto;
-        objeto.DataErroJson(DATA{"Sistema de Salvamento","Nenhum","Salvamento com Sucesso",});
-        GLOBAL::ARRAY::log_array.push_back(objeto);
+        DataInfoLog objeto;
+        objeto.DataErroJson(DATA{
+            "Sistema de Salvamento",
+            "Nenhum",
+            "Salvamento com Sucesso",});
+        GLOBAL::ARRAY::LOG::log_array.push_back(objeto);
     }
     else {
         ui->label_3->setText("Falha de salvamento");
@@ -293,7 +310,6 @@ void _windows_::on_btn_add_clicked() {
         for (int a = 0; a < ui->tableWidget->columnCount();a++) {
              if (ui->tableWidget->item(b,a) == nullptr) {
                  ui->tableWidget->setItem(b,a,new QTableWidgetItem);
-
                  QStringList labels;
                  labels << "";
                  ui->tableWidget->setVerticalHeaderLabels(labels);
@@ -301,6 +317,7 @@ void _windows_::on_btn_add_clicked() {
         }
     }
 
+    ui->tableWidget->item(0,6)->setFlags(Qt::ItemIsEnabled);
     ui->tableWidget->item(0,6)->setFlags(Qt::ItemIsEnabled);
     ui->tableWidget->item(0,7)->setFlags(Qt::ItemIsEnabled);
     ui->tableWidget->item(0,8)->setFlags(Qt::ItemIsEnabled);

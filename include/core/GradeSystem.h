@@ -37,6 +37,9 @@ private :
 
     double IA{};
     bool is_arrenado;
+
+     int x = 0;
+
 QTableWidget *table_widget_;
 public :
       void processGradeResult(int indexItem);

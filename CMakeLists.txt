@@ -90,8 +90,8 @@ add_executable(AvaliacaoDaPuc
         include/utils/GlobalAccess.h
         src/io/json_parser.cpp
         include/io/json_parser.h
-        src/data/info_log.cpp
-        include/data/info_log.h
+        src/data/DataInfoLog.cpp
+        include/data/DataInfoLog.h
 )
 
 # -------------------------

@@ -14,13 +14,13 @@ public :
      QString erro;
      QString mensagem;
 };
-class info_log {
+class DataInfoLog {
 private :
     DATA data;
 public :
     void DataErroJson(DATA data_ptr);
     QString GetMensagemErro();
-    info_log();
+    DataInfoLog();
 };
 
 

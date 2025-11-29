@@ -85,10 +85,7 @@
        </font>
       </property>
       <property name="styleSheet">
-       <string notr="true">QTableWidget {
-background-color: rgb(44, 44, 44);
-}
-</string>
+       <string notr="true"/>
       </property>
       <property name="frameShape">
        <enum>QFrame::Shape::NoFrame</enum>
