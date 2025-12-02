@@ -225,15 +225,26 @@ void GradeSystem::processGradeResult(int indexItem) {
         }
     }
 }
-bool GradeSystem::Is_verify_grade_format(int grade_values){
 
+bool validate_entry(QString entry) {
     const std::vector<QString> invalidCharacters =
-       {"-","[","]","!","@","#",
-       "$","%","^","&",
-        "*","(",")","+","=",
-        "{","}","|","\\",
-        ";",":","'",",",
-        "<",">","?","/","~"};
+    {"-","[","]","!","@","#",
+    "$","%","^","&",
+     "*","(",")","+","=",
+     "{","}","|","\\",
+     ";",":","'",",",
+     "<",">","?","/","~"};
+    std::string input_n2 = entry.toStdString();
+    for (auto & text : invalidCharacters) {
+        if (input_n2.find(text.toStdString().c_str()) != std::string::npos) {
+            return false;
+        }
+    }
+    return true;
+}
+
+bool GradeSystem::Is_verify_grade_format(int grade_values){
+        int dotCountN1 = 0; int dotCountN2 = 0;
 
         auto firstInput_n1 = this->table_widget_->item(grade_values, TYPE_GRADE::N1);
         auto firstInput_n2 = this->table_widget_->item(grade_values, TYPE_GRADE::N2);
@@ -244,29 +255,33 @@ bool GradeSystem::Is_verify_grade_format(int grade_values){
         if (firstInput_n1->text().isEmpty() || firstInput_n2->text().isEmpty()) {
             return false;
         }
-        if (firstInput_n1->text().size() > 4 || firstInput_n2->text().size() > 4) {
-            return false;
-        }
-        /// Verificar se algo letra
-        for (auto &s: firstInput_n1->text().toStdString()) {
-            if (isalpha(s)) {
+        for (auto &IP: firstInput_n1->text().toStdString()) {
+            if (isalpha(IP)) {
                 return false;
             }
         }
-        for (auto &w: firstInput_n2->text().toStdString()) {
-            if (isalpha(w)) {
+        for (auto &IP: firstInput_n2->text().toStdString()) {
+            if (isalpha(IP)) {
                 return false;
             }
         }
         std::string input_n1 = firstInput_n1->text().toStdString();
         std::string input_n2 = firstInput_n2->text().toStdString();
-        for (auto & text : invalidCharacters) {
-            if (input_n1.find(text.toStdString().c_str()) != std::string::npos ||
-                input_n2.find(text.toStdString().c_str()) != std::string::npos) {
-                 return false;
+        for (int a = 0; a < input_n1.size(); a++) {
+           if (input_n1[a] == '.') {
+               dotCountN1++;
+           }
+        }
+    sqrt()
+        for (int a = 0; a < input_n2.size(); a++) {
+            if (input_n2[a] == '.') {
+                dotCountN2++;
             }
         }
-    return true;
+        if (validate_entry(firstInput_n1->text()) == false || validate_entry(firstInput_n2->text()) == false) {
+            return false;
+        }
+    return !(dotCountN1 > 1 || dotCountN2 > 1);
 }
 GradeSystem::GradeSystem():
                  N1(0.0f),
