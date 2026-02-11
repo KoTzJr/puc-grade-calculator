@@ -1,8 +1,13 @@
 //
 // Created by KoTz on 25/07/2025.
 //
-
+#include <rapidcsv.h>
 #include "io/FileManager.h"
+
+#include "FileVx.h"
+#include "json_parser.h"
+#include <QMessageBox>
+
 
 /**
  * Inicializa o sistema de gerenciamento de arquivos configurando diretórios e arquivo de configuração
@@ -16,18 +21,20 @@ void FileManger::initialize_file_manager() {
     // Define o caminho para a pasta da aplicação no diretório Documentos do usuário
     QString patch = QDir::homePath() + "/Documents/PUCSimulador";
     std::filesystem::path path = patch.toStdString();
+    QString get;
 
-    // Verifica se o diretório e o arquivo de configuração válido já existem
-    if (std::filesystem::exists(path) == true && QFile{patch + "/config.json"}.exists() == true
-        && is_null_fileJson(patch + "/config.json") == false) {
-        GLOBAL::PATCH_FILE::CONFIG = patch + "/config.json";
-        return;
-    }
-    // Cria o diretório caso não exista
-    std::filesystem::create_directories(patch.toStdString());
-    std::ofstream file(patch.toStdString() + "/config.json");
+    // #ifdef _WIN32
+    //
+    // QMessageBox::information(nullptr,"E o windows","windows");
+    //
+    // #endif
+    //
+    // #ifdef __linux__
+    //   QMessageBox::information(nullptr,"É Linux","linux");
+    // #endif
 
-    // Define as configurações padrão
+
+
     info_config_list info
     {
         "Português", // Idioma padrão
@@ -36,16 +43,33 @@ void FileManger::initialize_file_manager() {
         "Claro" // Tema padrão
     };
 
+    // Verifica se o diretório e o arquivo de configuração válido já existem
+    if (std::filesystem::exists(path) == true && QFile{patch + "/config" + QString::fromStdString(config_file)}.exists() == true
+        && is_null_fileJson(patch + "/config" + QString::fromStdString(config_file)) == false) {
+        GLOBAL::PATCH_FILE::CONFIG = patch + "/config" + QString::fromStdString(config_file);
+        return;
+    }
+
+    for (auto & i : std::filesystem::directory_iterator(path)) {
+        if (i.path().string().find(config_file) != std::string::npos) {
+            get = QString::fromStdString(i.path().string());
+            QFile file(get);
+            file.open(QFile::ReadWrite | QFile::Text);
+            return;
+        };
+    }
+    // Cria o diretório caso não exista
+    std::filesystem::create_directories(patch.toStdString());
     // Salva o caminho na configuração global e escreve as configurações padrão
-    GLOBAL::PATCH_FILE::CONFIG = patch + "/config.json";
-    save(patch + "/config.json", info);
+    GLOBAL::PATCH_FILE::CONFIG = patch + "/config" + QString::fromStdString(config_file);
+    save(patch + "/config"+ QString::fromStdString(config_file), info);
 }
 
 
 bool FileManger::is_null_fileJson(QString path) {
      QFile file(path);
      file.open(QFile::ReadOnly | QFile::Text);
-     nlohmann::json json;
+     nlohmann::json json = {};
     try {
         json = nlohmann::json::parse(file.readAll().toStdString());
     }catch (nlohmann::json::exception & e) {
@@ -68,7 +92,7 @@ bool FileManger::Load(QString path,Json & get_json) {
         get_json = nlohmann::json::parse(file.readAll().toStdString());
 
     }catch (nlohmann::json::exception & e) {
-
+        qDebug() << QObject::tr("Error reading file %1").arg(path);
     }
     return true;
 }
@@ -91,68 +115,58 @@ _FILE_ FileManger::is_open(QString path) {
     _FILE_ obj = {is_open, path};
     return obj;
 }
-bool FileManger::save(QString path,info_config_list info) {
-    if (path.isEmpty()) {
+bool FileManger::save(QString path, std::variant<item_vector_array, info_config_list> obj) {
+    if (path.isEmpty() == true) {
         return false;
     }
     QFile filew(path);
     if (filew.exists() == true) {
         filew.remove();
     }
-      std::fstream file(path.toStdString(),std::ios::app);
-       auto idioma =  info.idioma;
-       auto config =  GLOBAL::PATCH_FILE::CONFIG;
-       auto tema   =  info.Theme;
-       auto fonte  =  info.fonte;
-        nlohmann::json json = {
-            {"idioma" , idioma.toStdString()},
-            {"config",  config.toStdString()},
-            {"tema",    tema.toStdString()},
-            {"Fonte",   fonte.toStdString()},
-        };
-        file << json.dump(2);
-    if (file.is_open()) {
-        file.close();
-        return true;
-    }
-    if (file.fail()) {
-        return false;
-    }
+    nlohmann::ordered_json json_;
 
-    return  false;
-}
-bool FileManger::save(QString path,std::vector<Oitem> obj) {
-
-    if (path.isEmpty() == true || obj.empty() == true) {
-        return false;
-    }
-    QFile filew(path);
-    if (filew.exists() == true) {
-        filew.remove();
-    }
     std::fstream file(path.toStdString(),std::ios::app);
-       if (obj.empty() == false) {
-           nlohmann::ordered_json json = nlohmann::ordered_json::array();
-           for (auto & value : obj) {
-               nlohmann::ordered_json basic_json = {
-                   {"nome",value.name.toStdString()},
-                   {"aulas previstas",value.planned_classes},
-                   {"aulas ministradas",value.taught_classes},
-                   {"numero presenca",value.attendance_count},
-                   {"N1",value.N1},
-                   {"N2",value.N2},
-               };
-               json.push_back(basic_json);
-       }
-           file << json.dump(4);
-           if (file.is_open()) {
-               file.close();
-               return true;
-           }
-           if (file.fail()) {
-               return false;
-           }
-   }
+    if (file.is_open() == true) {
+        if (std::holds_alternative<item_vector_array>(obj)) {
+            if (std::get<item_vector_array>(obj).empty() == false) {
+                nlohmann::ordered_json json = nlohmann::ordered_json::array();
+                for (auto & value : std::get<item_vector_array>(obj)) {
+                    nlohmann::ordered_json basic_json = {
+                        {"nome",value.name.toStdString()},
+                        {"aulas previstas",value.planned_classes},
+                        {"aulas ministradas",value.taught_classes},
+                        {"numero presenca",value.attendance_count},
+                        {"N1",value.N1},
+                        {"N2",value.N2},
+                    };
+                    json.push_back(basic_json);
+                }
+                file << json.dump(4);
+            }
+        }
+        if (std::holds_alternative<info_config_list>(obj)) {
+            // nlohmann::json json = {
+            //     {"idioma" ,    std::get<info_config_list>(obj).idioma.toStdString()},
+            //     {"config",     GLOBAL::PATCH_FILE::CONFIG.toStdString()},
+            //     {"tema",       std::get<info_config_list>(obj).Theme.toStdString()},
+            //     {"Fonte",      std::get<info_config_list>(obj).fonte.toStdString()},
+            // };
+
+           auto  json = json_parser::info_file(
+                             INFO{std::get<info_config_list>(obj).idioma.toStdString(),
+                                   GLOBAL::PATCH_FILE::CONFIG.toStdString(),
+                                    std::get<info_config_list>(obj).Theme.toStdString(),
+                                   std::get<info_config_list>(obj).fonte.toStdString()});
+            file << json.dump(2);
+        }
+       auto value = FileVx::converteJsonFromFileVX(QString::fromStdString(path.toStdString()));
+        if (value == 0 || value == -2 || value == -1) {
+            return false;
+        }
+        if (value == 1 || value == 2) {
+            return true;
+        }
+    }
     return false;
 }
 FileManger::FileManger() {}

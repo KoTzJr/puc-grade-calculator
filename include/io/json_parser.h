@@ -8,10 +8,21 @@
 #include <QString>
 
 
-class json_parser {
+struct  INFO {
+     std::string idioma;
+     std::string config;
+     std::string tema;
+     std::string fonte;
+};
 
+
+class json_parser {
 public :
-     static nlohmann::json GetFileJson(QString Patch,QString Palavra_chave);
+     static nlohmann::json info_file(INFO obj);
+     static QString GetFileJson_Str(QString patch,QString key);
+     static nlohmann::json GetFileJson(QString Patch,QString key);
+     static bool WriteFileJson(QString Patch,std::string chave,std::string text);
+     static void removeQuotes(QString & str);
      json_parser();
 };
 

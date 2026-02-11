@@ -25,7 +25,8 @@
       "Aprovado" : "Approved",
       "Reprovado" : "Failed",
       "Tema" : "Theme",
-      "Fonte" : "Font"
+      "Fonte" : "Font",
+      "Escuro" : "Dark"
     },
     "Português" : {
       "Approved" : "Aprovado",
@@ -55,7 +56,8 @@
       "apply": "Aplicar",
       "save" : "Salvo",
       "theme" : "Tema",
-      "Font" : "Fonte"
+      "Font" : "Fonte",
+      "dark" : "Escuro"
      }
 
 }

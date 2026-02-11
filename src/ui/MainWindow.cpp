@@ -6,14 +6,15 @@
 
 
 #include "ui/MainWindow.h"
-#include "ui/InfoWindow.h"
 #include <io/json_parser.h>
-#include <QLocale>
+#include <rapidcsv.h>
+#include <QDebug>
+#include <fmt/std.h>
+#include <fmt/color.h>
 
-void _windows_::on_btn_infoSystem_clicked() {
-     UI_LogWindow *info = new UI_LogWindow(this);
-     info->show();
-}
+#include <algorithm>
+#include "../io/FileVx.h"
+
 static bool max_ilimite_value(double n1,double n2) {
     if (n1 > 10.0 || n2 > 10.0) {
         return true;
@@ -49,6 +50,7 @@ void _windows_::Update_table_data() {
         }
     }
 }
+
 /**
  * Inicializa os componentes principais da janela
  * 
@@ -61,17 +63,11 @@ void _windows_::Update_table_data() {
  */
 void _windows_::init() {
     std::unique_ptr<ui_controller> controller_ui = std::make_unique<ui_controller>();
-    //controller_ui->UI_init(this->ui);
     ui_controller::Button(TYPE::MAIN_WINDOW,ui);
-    ui_controller::TableWidget(ui);
+    //ui_controller::TableWidget(ui);
     FileManger::initialize_file_manager();
     GLOBAL::init_global(ui);
-}
-void SortTable() {
-     if (GLOBAL::UI->tableWidget != nullptr) {
-         // GLOBAL::UI->tableWidget->sortByColumn(4,Qt::DescendingOrder);
-         // GLOBAL::UI->tableWidget->sortByColumn(5,Qt::DescendingOrder);
-     }
+    ui_controller::WindowSystemTema();
 }
 /**
 * Função que atualiza as notas na tabela
@@ -79,7 +75,6 @@ void SortTable() {
 * a interface atualizada
 */
 void _windows_::Update() {
-    SortTable();
     Update_table_data();
 }
 /**
@@ -119,12 +114,12 @@ _windows_::_windows_(QWidget *parent) : QMainWindow(parent), ui(new Ui::_windows
  * @note A função atualiza um label na interface indicando sucesso ou falha do salvamento
  * @note Se a tabela estiver vazia, a função retorna sem fazer nada
  */
-void _windows_::info_save(QString path,TYPE_SAVE value) {
+void _windows_::saveTableData(QString path,TYPE_SAVE value) {
     bool is_file_save = false;
 
-   if (ui->tableWidget->rowCount() == 0) {
-       return;
-   }
+    if (ui->tableWidget->rowCount() == 0) {
+        return;
+    }
     for (int index_item = 0; index_item < ui->tableWidget->rowCount(); index_item++) {
         auto nome = ui->tableWidget->item(index_item, 0)->text();
         auto aula_prevista = ui->tableWidget->item(index_item, 1)->text().toInt();
@@ -142,34 +137,25 @@ void _windows_::info_save(QString path,TYPE_SAVE value) {
         }
         is_file_save = FileManger::save(info_file.fileName,item_list_);
     }
-   if (value == TYPE_SAVE::SAVE_AS) {
+    if (value == TYPE_SAVE::SAVE_AS) {
         is_file_save = FileManger::save(path,item_list_);
-   }
+    }
     if (value == TYPE_SAVE::SAVE_LOCAL_FILE) {
         is_file_save = FileManger::save(GLOBAL::PATCH_FILE::DATA,item_list_) ;
     }
     if (is_file_save) {
         ui->label_3->setText("Salvo !");
-        DataInfoLog objeto;
-        objeto.DataErroJson(DATA{
-            "Sistema de Salvamento",
-            "Nenhum",
-            "Salvamento com Sucesso",});
-        GLOBAL::ARRAY::LOG::log_array.push_back(objeto);
     }
     else {
         ui->label_3->setText("Falha de salvamento");
     }
     item_list_.clear();
 }
-
 void _windows_::on_actionOpition_triggered() {
-     op = new option(this);
-     op->show();
+        op = new option(this);
+        op->setWindowFlags(Qt::Window | Qt::WindowCloseButtonHint);
+        op->show();
 }
-
-
-
 void _windows_::on_actionSalvar_como_triggered() {
     std::unique_ptr<QFileDialog> fileDialog = std::make_unique<QFileDialog>(this);
     auto selectedFile = fileDialog->getSaveFileName(this,"Salvar o arquivo","","");
@@ -180,7 +166,7 @@ void _windows_::on_actionSalvar_como_triggered() {
          selectedFile = QString::fromStdString(filePath);
     }
     if (selectedFile!= nullptr && filePath.find(".json") != std::string::npos) {
-         info_save(selectedFile,SAVE_AS);
+         saveTableData(selectedFile,SAVE_AS);
     }else {
         ui->label_3->setText("Falha de salvamento necessario Json ");
     }
@@ -203,7 +189,11 @@ QString removeDoubleQuotes(QString str) {
  * com id, nome e notas de cada aluno
  */
 void _windows_::on_actionSalvar_triggered() {
-     info_save("",SAVE_LOCAL_FILE);
+    if (is_file_open == true) {
+        saveTableData(info_file.fileName,SAVE_AS);
+        return;
+    }
+     saveTableData("",SAVE_LOCAL_FILE);
 }
 /**
  * Função chamada quando a opção "Abrir" é acionada
@@ -211,10 +201,9 @@ void _windows_::on_actionSalvar_triggered() {
  * e carrega seu conteúdo na tabela, populando nome e notas
  */
 void _windows_::on_actionAbrir_triggered() {
-    FileManger file;
     bool is_file_aluno = false;
     std::unique_ptr<QFileDialog> newDialog = std::make_unique<QFileDialog>(this);
-    auto openFileUrl = newDialog->getOpenFileUrl(this, "Abrir JSON", QUrl(), "Arquivos JSON (*.json)");
+    auto openFileUrl = newDialog->getOpenFileUrl(this, "Abrir VX", QUrl(), "Arquivos VX (*.vx)");
     nlohmann::json get_json = {};
 
     if (ui->tableWidget->rowCount() > 0) {
@@ -263,6 +252,8 @@ void _windows_::on_actionAbrir_triggered() {
                     ui->tableWidget->item(index,3)->setText(removeDoubleQuotes(QString::fromStdString(numeros_preseca)));
                     ui->tableWidget->item(index,4)->setText(removeDoubleQuotes(QString::fromStdString(N1)));
                     ui->tableWidget->item(index,5)->setText(removeDoubleQuotes(QString::fromStdString(N2)));
+                
+                    ui->tableWidget->verticalHeader()->setVisible(false);
                     index++;
                 is_file_aluno = true;
             }
@@ -270,12 +261,13 @@ void _windows_::on_actionAbrir_triggered() {
     }catch (std::exception &e) {
         qDebug() << e.what();
     }
-                if (is_file_aluno == true) {
-                     QString info = "Arquivo aberto: "+ openFileUrl.fileName();
-                     ui->info_arquivo->setText("Arquivo aberto: "+ openFileUrl.fileName());
-                     info_file.fileName = openFileUrl.toLocalFile();
-                     info_file.isFileOpen = is_file_open;
-                }
+        if (is_file_aluno == true) {
+             QString info = "Arquivo aberto: "+ openFileUrl.fileName();
+             ui->info_arquivo->setText("Arquivo aberto: "+ openFileUrl.fileName());
+             info_file.fileName = openFileUrl.toLocalFile();
+             info_file.isFileOpen = is_file_open;
+        }
+
 }
 /**
  * Função chamada quando a opção "Novo" é acionada
@@ -290,7 +282,7 @@ void _windows_::on_actionNovo_triggered() {
  * Libera a memória alocada para o objeto ui
  */
 _windows_::~_windows_() {
-    //delete is;
+    delete is;
     delete ui;
 }
 
@@ -313,6 +305,7 @@ void _windows_::on_btn_add_clicked() {
                  QStringList labels;
                  labels << "";
                  ui->tableWidget->setVerticalHeaderLabels(labels);
+                 ui->tableWidget->verticalHeader()->setVisible(false);
              }
         }
     }
@@ -326,32 +319,13 @@ void _windows_::on_btn_add_clicked() {
  * Função chamada quando o botão "Remover" é clicado
  * Remove a última linha da tabela
  */
-
-class TS {
-public :
-    int row;
-};
 void _windows_::on_btn_remover_clicked()
 {
-   bool is_Selected = false;
-    int value = 0;
-    for (int a = 0; a < ui->tableWidget->rowCount();a++) {
-        for (int b = 0; b < ui->tableWidget->columnCount();b++) {
-           qDebug () << a << ": " << b <<  ui->tableWidget->item(a,b)->isSelected();
-           // ui->tableWidget->removeRow(a);
-        }
-    }
-    if (is_Selected == true) {
-        // auto itemList =  ui->tableWidget->selectedItems();
-        // if (itemList.isEmpty() == false) {
-        //     if (itemList.at(0)->tableWidget() == nullptr) {
-        //         return;
-        //     }
-        //     auto index =  itemList.at(1)->row();
-        //     ui->tableWidget->removeRow(index);
-        // }
-        // // if (is_Selected == false) {
-        // //     ui->tableWidget->removeRow(ui->tableWidget->rowCount() - 1);
-        // // }
-    }
+     std::set<int> listitem;
+     for (auto & i : ui->tableWidget->selectedItems()) {
+         listitem.insert(i->row());
+     }
+     for (auto i : listitem) {
+        ui->tableWidget->removeRow(i);
+     }
 }

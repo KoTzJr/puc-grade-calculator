@@ -13,11 +13,18 @@
 #include "utils/GlobalAccess.h"
 #include "ui/LanguageUI.h"
 #include <QDir>
+#include <QKeyEvent>
 #include <QLocale>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class _windows_; }
 QT_END_NAMESPACE
+
+
+struct index_window {
+     int window_janela_opition = 0;
+     int window_janela_info = 0;
+};
 
 class _windows_ : public QMainWindow  {
     Q_OBJECT
@@ -35,15 +42,11 @@ private slots:
     void on_actionNovo_triggered();
     void on_actionSalvar_triggered();
     void on_actionSalvar_como_triggered();
-
-
-    void on_btn_infoSystem_clicked();
-
     void on_actionOpition_triggered();
 
     void init ();
 
-    void info_save(QString patch,TYPE_SAVE Value);
+    void saveTableData(QString patch,TYPE_SAVE Value);
 private:
     Ui::_windows_ *ui;
     QTimer *timer;
@@ -56,6 +59,8 @@ private:
     _FILE_ info_file;
     option *op;
     bool is_file_open = false;
+
+    index_window index_window_info;
 
 };
 #endif //_WINDOWS__H

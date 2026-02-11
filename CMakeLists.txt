@@ -23,10 +23,10 @@ endif()
 # -------------------------
 # Bibliotecas externas
 # -------------------------
+find_path(RAPIDCSV_INCLUDE_DIRS "rapidcsv.h")
 find_package(fmt CONFIG REQUIRED)
 find_package(Qt6 COMPONENTS Core Gui Widgets REQUIRED)
 find_package(nlohmann_json CONFIG REQUIRED)
-
 # -------------------------
 # Includes
 # -------------------------
@@ -37,7 +37,9 @@ include_directories(
         ${CMAKE_SOURCE_DIR}/include/io
         ${CMAKE_SOURCE_DIR}/include/ui
         ${CMAKE_SOURCE_DIR}/include/utils
+        ${CMAKE_SOURCE_DIR}/Extern/tiny-AES-c/
         ${CMAKE_CURRENT_BINARY_DIR}
+        ${RAPIDCSV_INCLUDE_DIRS}
 )
 
 # Definição do caminho das UI (Qt)
@@ -76,8 +78,6 @@ add_executable(AvaliacaoDaPuc
         # UI
         src/ui/MainWindow.cpp
         include/ui/MainWindow.h
-        src/ui/InfoWindow.cpp
-        include/ui/InfoWindow.h
         src/ui/UIManager.cpp
         include/ui/UIManager.h
         src/ui/LanguageUI.cpp
@@ -92,6 +92,8 @@ add_executable(AvaliacaoDaPuc
         include/io/json_parser.h
         src/data/DataInfoLog.cpp
         include/data/DataInfoLog.h
+        src/io/FileVx.cpp
+        src/io/FileVx.h
 )
 
 # -------------------------
@@ -104,6 +106,7 @@ target_link_libraries(AvaliacaoDaPuc PRIVATE
         fmt::fmt
         nlohmann_json::nlohmann_json
 )
+##target_include_directories(main PRIVATE ${RAPIDCSV_INCLUDE_DIRS})
 
 # -------------------------
 # Pós-build (Qt para Windows)

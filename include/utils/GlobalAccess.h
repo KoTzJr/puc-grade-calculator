@@ -16,8 +16,11 @@
 namespace GLOBAL {
      extern   QString idioma;
      extern   bool is_aplica;
-     extern   Ui::_windows_ * UI;
-     extern   Ui::option   *_ui_option;
+     extern   bool is_close_window_option;
+     namespace WINDOW {
+          extern   Ui::_windows_ * UI;
+          extern   Ui::option   *_ui_option;
+     }
      extern   nlohmann::json json;
      namespace PATCH_FILE {
           const    QString DATA = QDir::homePath() + "/Documents/PUCSimulador/data.json";

@@ -8,17 +8,20 @@
 namespace GLOBAL {
     QString idioma;
     bool is_aplica;
-    Ui::_windows_ * UI;
-    Ui::option    *_ui_option;
+    bool is_close_window_option;
+    namespace WINDOW {
+        Ui::_windows_ * UI;
+        Ui::option    *_ui_option;
+    }
     nlohmann::json json;
     void init_global(Ui::_windows_ * windows) {
         if (windows != nullptr) {
-            UI = windows;
+            WINDOW::UI = windows;
         }
     }
     void init_global( Ui::option * option) {
         if (option != nullptr) {
-            _ui_option = option;
+            WINDOW::_ui_option = option;
         }
     }
     namespace ARRAY {

@@ -271,9 +271,7 @@ bool GradeSystem::Is_verify_grade_format(int grade_values){
            if (input_n1[a] == '.') {
                dotCountN1++;
            }
-        }
-    sqrt()
-        for (int a = 0; a < input_n2.size(); a++) {
+        }for (int a = 0; a < input_n2.size(); a++) {
             if (input_n2[a] == '.') {
                 dotCountN2++;
             }

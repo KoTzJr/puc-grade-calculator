@@ -5,58 +5,97 @@
 // You may need to build the project (run Qt uic code generator) to get "ui_option.h" resolved
 
 #include "ui/PreferenceSystem.h"
-
 #include <QFileDialog>
-
+#include <fmt/base.h>
 #include "json_parser.h"
 #include "ui_option.h"
 #include "io/FileManager.h"
 #include "utils/GlobalAccess.h"
 #include "qwidget.h"
 #include "UIManager.h"
+#include <fmt/std.h>
+
+#include "FileManager.h"
 
 option::option(QWidget *parent) : QMainWindow(parent), ui_option_(new Ui::option) {
     ui_option_->setupUi(this);
     GLOBAL::init_global(ui_option_);
+    auto value = GLOBAL::json["Fonte"];
+    ui_option_->fontComboBox->setCurrentFont(QString::fromStdString(nlohmann::to_string(value)));
+    ui_option_->Combox_tema->setCurrentText(json_parser::GetFileJson_Str(GLOBAL::PATCH_FILE::CONFIG,"tema"));
     UI_FONT::text(GLOBAL::json,ui_option_);
     ui_option_->lineEdit->setEnabled(false);
+
    if (json_parser::GetFileJson(GLOBAL::PATCH_FILE::CONFIG,"config").is_null() == false) {
+
        auto get= QString::fromStdString(json_parser::GetFileJson(GLOBAL::PATCH_FILE::CONFIG,"config")).remove("'");
+       QString GetData = QString::fromStdString(nlohmann::to_string(json_parser::GetFileJson(GLOBAL::PATCH_FILE::CONFIG,"inventario")));
        ui_option_->lineEdit->setText(QUrl{get}.fileName());
    }
     if (GLOBAL::idioma == "Ingles") {
             setWindowTitle(QString::fromStdString(LanguageUI::getLanguageJsonValue("en","Sistema de Preferencia"))
             .remove(""));
-        LanguageUI::updateLanguageUI(GLOBAL::idioma);
+        auto i = LanguageUI::getLanguageJsonValue("en","Escuro");
+        auto get = QString::fromStdString(nlohmann::to_string(i));
+        json_parser::removeQuotes(get);
+        ui_option_->Combox_tema->setItemText(0,get);
+        LanguageUI::UpdateLanguage_UI(GLOBAL::idioma);
         ui_option_->comboBox->setCurrentIndex(1);
     }
     if (GLOBAL::idioma == "Português") {
         setWindowTitle(QString::fromStdString
             (LanguageUI::getLanguageJsonValue("Português","Preference System"))
             .remove(""));
-        LanguageUI::updateLanguageUI(GLOBAL::idioma);
+        LanguageUI::UpdateLanguage_UI(GLOBAL::idioma);
         ui_option_->comboBox->setCurrentIndex(0);
     }
 }
 
+
+void option::set_setting (QString Theme,QString idioma,QString Fonte) {
+     ui_option_->comboBox->setCurrentIndex(LanguageUI::IsLanguageValid(Theme));
+     ui_option_->Combox_tema->setCurrentText(Theme);
+     ui_option_->fontComboBox->setCurrentFont(Fonte);
+}
+
+
 void option::on_btn_search_paste_clicked() {
     QFileDialog fileDialog(this);
     fileDialog.setFileMode(QFileDialog::ExistingFile);
-    QString fileName = fileDialog.getOpenFileName(this, tr("Open File"), "", tr("Arquivos JSON (*.json)"));
+
+    QString fileName = fileDialog.getOpenFileName(this, tr("Open File"), "", tr(
+        fmt::format("Arquivos Vx (*{})",config_file).c_str()));
     if (fileName.isEmpty() == true) {
         return;
     }
     ui_option_->lineEdit->setText(QUrl(fileName).fileName());
-    GLOBAL::PATCH_FILE::CONFIG = fileName;
+    ///GLOBAL::PATCH_FILE::CONFIG = fileName;
+    this->file_antigo = QUrl(fileName).fileName();
+    std::vector<nlohmann::json> json_array;
+    std::array<QString,3> text = {"idioma","Fonte","tema"};
+    std::array<QString,3> gt;
+    for (int i = 0; i < text.size(); i++) {
+        json_array.push_back( json_parser::GetFileJson(fileName,text[i]));
+        text[i] = QString::fromStdString(nlohmann::to_string(json_array[i]));
+        json_parser::removeQuotes(text[i]);
+    }
+   // json_parser::WriteFileJson(fileName,"config",fileName.toStdString());
+     set_setting(text[2],text[0],text[1]);
+    LanguageUI::UpdateLanguage_UI(text[0]);
+
+    UI_FONT::text(text[1],ui_option_,GLOBAL::WINDOW::UI);
+    ui_controller::WindowSystemTema(text[2]);
+    if (json_array.empty() == false) {
+        json_array.clear();
+    }
 }
-
 void option::on_btn_aplicar_clicked() {
-
-    Json json;
+    Json json,json_config;
+    json_config = GLOBAL::json;
     auto idioma = ui_option_->comboBox->currentText();
     QString idi;
     QString Palavra_chave = "";
-    UI_FONT::get(ui_option_->fontComboBox->currentText());
+    UI_FONT::text(ui_option_->fontComboBox->currentText(),ui_option_,GLOBAL::WINDOW::UI);
     if (idioma == "Ingles") {
         Palavra_chave = "Sistema de Preferencia";
         idi = "en";
@@ -65,16 +104,19 @@ void option::on_btn_aplicar_clicked() {
         Palavra_chave = "PreferenceSystem";
         idi = "Português";
     }
-    LanguageUI::updateLanguageUI(idioma);
+    LanguageUI::UpdateLanguage_UI(idioma);
     setWindowTitle(QString::fromStdString
             (LanguageUI::getLanguageJsonValue(idi,Palavra_chave))
             .remove(""));
+    ui_controller::WindowSystemTema(ui_option_->Combox_tema->currentText());
 }
 void option::on_btn_salvar_clicked() {
+
     info_config_list config;
-    config.idioma = ui_option_->comboBox->currentText();
-    config.fonte  = ui_option_->fontComboBox->currentText();
-    config.Theme  = ui_option_->Combox_tema->currentText();
+    config.idioma    = ui_option_->comboBox->currentText();
+    config.fonte     = ui_option_->fontComboBox->currentText();
+    config.Theme     = ui_option_->Combox_tema->currentText();
+
     auto file_save = FileManger::save(GLOBAL::PATCH_FILE::CONFIG,config);
     if (file_save) {
         qDebug () << "Salvo com sucesso";
@@ -85,4 +127,5 @@ void option::on_btn_salvar_clicked() {
 
 option::~option() {
     delete ui_option_;
+    GLOBAL::is_close_window_option = true;
 }

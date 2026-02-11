@@ -24,9 +24,6 @@
   <property name="windowTitle">
    <string>Projeto Teste</string>
   </property>
-  <property name="styleSheet">
-   <string notr="true">background-color: rgb(44, 44, 44);</string>
-  </property>
   <property name="tabShape">
    <enum>QTabWidget::TabShape::Rounded</enum>
   </property>
@@ -210,24 +207,6 @@
           </size>
          </property>
         </spacer>
-       </item>
-       <item>
-        <widget class="QPushButton" name="btn_infoSystem">
-         <property name="maximumSize">
-          <size>
-           <width>50</width>
-           <height>60</height>
-          </size>
-         </property>
-         <property name="font">
-          <font>
-           <family>Arial</family>
-          </font>
-         </property>
-         <property name="text">
-          <string>info</string>
-         </property>
-        </widget>
        </item>
        <item>
         <widget class="QLabel" name="info_arquivo">

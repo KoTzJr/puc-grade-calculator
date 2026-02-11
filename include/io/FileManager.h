@@ -19,6 +19,8 @@
 typedef std::vector<Oitem> item_vector_array;
 typedef Info_config info_config_list;
 
+const std::string config_file = ".cfgVx";
+
 enum OPTION {
     SAVE_FILE_JSON_ALUNO = 0,
     SAVE_FILE_JSON_Sistema = 1
@@ -46,9 +48,7 @@ public :
     static bool is_null_fileJson(QString patch);
     static bool Load(QString path,Json & get_json);
     static bool Load(const QString path,nlohmann::json & get_json, bool & open);
-    // static bool save(QString path,ErrorManager obj);
-    static bool save(QString path,item_vector_array obj);
-    static bool save(QString path,info_config_list info);
+    static bool save(QString path,std::variant<item_vector_array,info_config_list> obj);
     FileManger();
 
 };

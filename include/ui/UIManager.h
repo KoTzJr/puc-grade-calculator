@@ -11,6 +11,7 @@
 const QString ui_styles_ = QDir::homePath() + "/Documents/GitHub/puc-grade-calculator/styles/ui_styles.qss";
 const QString ui_styles__ =  "/home/kotz/Documentos/GitHub/puc-grade-calculator/styles/ui_styles.qss";
 const QString ui_styles_tabel_widget = "C:\\Users\\KoTz\\Documents\\GitHub\\puc-grade-calculator\\styles\\styles_tabel_widget.qss";
+const QString window_light = "C:\\Users\\KoTz\\Documents\\GitHub\\puc-grade-calculator\\styles\\window_branco.qss";
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class _windows_; class Style;}
@@ -32,13 +33,16 @@ class ui_controller {
 public:
     static void TableWidget(Ui__windows_ * ui);
     static void Button(TYPE,Ui__windows_ * ui);
+    static void Window_Dark(Ui__windows_ * ui);
+    static void Window_Light(Ui__windows_ * ui,Ui::option *op);
+
+    static void WindowSystemTema();
+    static void WindowSystemTema(QString tema);
 };
 struct UI_FONT {
-    static void get(QString fonte);
+    static void text(QString fonte,Ui::option * ui,Ui__windows_ *win);
     static void text(nlohmann::json json,Ui__windows_ * ui);
-    static void text(QString fonte,nlohmann::json json, Ui::option * ui);
     static void text(nlohmann::json json, Ui::option * ui);
-
 };
 
 
